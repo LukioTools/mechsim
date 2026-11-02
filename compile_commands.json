@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/hiha/developer/mechsim",
+  "command": "/usr/bin/cc  -I/home/hiha/developer/mechsim/glad/include  -o CMakeFiles/glad.dir/glad/src/glad.c.o -c /home/hiha/developer/mechsim/glad/src/glad.c",
+  "file": "/home/hiha/developer/mechsim/glad/src/glad.c",
+  "output": "CMakeFiles/glad.dir/glad/src/glad.c.o"
+},
+{
+  "directory": "/home/hiha/developer/mechsim",
+  "command": "/usr/bin/c++  -I/home/hiha/developer/mechsim/glad/include  -o CMakeFiles/main.dir/main.cpp.o -c /home/hiha/developer/mechsim/main.cpp",
+  "file": "/home/hiha/developer/mechsim/main.cpp",
+  "output": "CMakeFiles/main.dir/main.cpp.o"
+}
+]

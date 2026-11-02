@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/hiha/developer/mechsim/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

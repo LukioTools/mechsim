@@ -1,0 +1,4 @@
+/home/hiha/developer/mechsim/CMakeFiles/glad.dir
+/home/hiha/developer/mechsim/CMakeFiles/main.dir
+/home/hiha/developer/mechsim/CMakeFiles/edit_cache.dir
+/home/hiha/developer/mechsim/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/hiha/c++/tictacto/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/main.dir/main.cpp.o -c /home/hiha/c++/tictacto/main.cpp",
+  "file": "/home/hiha/c++/tictacto/main.cpp"
+}
+]
