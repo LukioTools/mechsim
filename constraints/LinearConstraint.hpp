@@ -31,7 +31,7 @@ class LinearConstraint : public Constraint {
         }
 
         std::string editor() override {
-            return "1: joint     p: position     d: direction";
+            return "1: joint     p: position     d: direction     r: delete";
         }
 
     private:

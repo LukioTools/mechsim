@@ -8,29 +8,24 @@ class DirectionConstraint : public Constraint {
     public:
         std::shared_ptr<Joint> j1;
         std::shared_ptr<Joint> j2;
-        std::shared_ptr<Vec2> direction;
+        std::shared_ptr<Vec2> direction_point;
 
-        DirectionConstraint(std::shared_ptr<Joint> j1, std::shared_ptr<Joint> j2, std::shared_ptr<Joint> dir) : j1(j1), j2(j2), direction(dir) { }
+        DirectionConstraint(std::shared_ptr<Joint> j1, std::shared_ptr<Joint> j2, std::shared_ptr<Joint> dir) : j1(j1), j2(j2), direction_point(dir) { }
 
         float error() override { 
+            Vec2 direction = (*direction_point)-(*j1);
+
             float Ax = j2->x-j1->x;
             float Ay = j2->y-j1->y;
             
-            float cross = Ax*direction->y-Ay*direction->x;
-            float dot = Ax*direction->x+Ay*direction->y;
-
-            /*
-            std::cout << "A: (" << Ax << ", " << Ay << ")\n";
-            std::cout << "B: (" << direction.x << ", " << direction.y << ")\n";
-            std::cout << "cross: " << cross << '\n';
-            std::cout << "dot: " << dot << '\n';
-            std::cout << "angle: " << atan2(cross, dot) << '\n';
-            */
+            float cross = Ax*direction.y-Ay*direction.x;
+            float dot = Ax*direction.x+Ay*direction.y;
 
             return atan2(cross, dot);
         }
 
         void fill_jacobian_row(Eigen::Ref<Eigen::RowVectorXd> row) const override {
+            
             row.setZero();
 
             float den = (j1->x-j2->x)*(j1->x-j2->x)+(j1->y-j2->y)*(j1->y-j2->y);
@@ -59,7 +54,7 @@ class DirectionConstraint : public Constraint {
         }
 
         std::string editor() override {
-            return "1: joint 1     2: joint 2     d: direction";
+            return "1: joint 1     2: joint 2     d: direction     r: delete";
         }
 
     private:

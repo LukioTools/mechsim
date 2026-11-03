@@ -51,7 +51,7 @@ class LimitConstraint : public Constraint {
         }
 
         std::string editor() override {
-            return "j: joint     1: limit 1     2: limit 2";
+            return "j: joint     1: limit 1     2: limit 2     r: delete";
         }
 
     private:

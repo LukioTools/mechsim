@@ -193,23 +193,14 @@ int main() {
         }
 
         // Solver:
-        TUI::setCursor(Vec2(70, 0));
-        std::cout << "before solving: " << status.stopSimulation << std::flush;
         if(!status.stopSimulation) {
             solver->updateConstraints(simulationData.constraints);
-            bool fixed_result = solver->solve(1000);
+            bool fixed_result = solver->solve(100);
             if(fixed_result) {
-                TUI::setCursor(Vec2(100, 0));
+                TUI::setCursor(Vec2(70, 0));
                 std::cout << "solved" << std::flush;
-            } else {
-                TUI::setCursor(Vec2(100, 0));
-                std::cout << "unsolved" << std::flush;
             }
-        } else {
-            TUI::setCursor(Vec2(100, 0));
-            std::cout << "paused" << std::flush;
         }
-
         glfwSwapBuffers(window);
         glfwPollEvents();    
     }

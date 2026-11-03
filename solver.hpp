@@ -44,6 +44,7 @@ struct Solver {
     int max_variable_index;
 
     void get_joints() {
+        joints.clear();
         for (std::shared_ptr<Constraint> constraint : (*constraints)) {
             for (std::shared_ptr<Joint> joint : constraint->get_joints()) {
                 if(std::find(joints.begin(), joints.end(), joint) != joints.end()) continue;
@@ -161,6 +162,8 @@ struct Solver {
 
             Eigen::VectorXd delta_q = -J.transpose() * A.ldlt().solve(errors);
 
+            double step_length = delta_q.norm();
+
             for (std::shared_ptr<Joint> joint : joints) {
                 if(joint->variable_index == grounded) continue;
                 
@@ -169,7 +172,7 @@ struct Solver {
                 joint->move(delta);
             }
         }
-        //resetPositions();
+        resetPositions();
         return false;
     }
 };

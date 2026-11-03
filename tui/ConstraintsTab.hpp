@@ -24,6 +24,7 @@ struct ConstraintsTab : Element {
         NEW_Constraint,
         SELECT_CONSTRAINT,
         CONSTRAINT_SELECTED,
+        VECTOR_INPUT,
         EXIT
     };
     
@@ -40,11 +41,6 @@ struct ConstraintsTab : Element {
     Vec2 screenSize;
     ConstraintsTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> cst, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js, std::shared_ptr<Solver> s) : screenSize(size), constraints(cst), joints(js), solver(s) {
             
-        keyboard['s'] = [this]() {
-            if(stage == CONSTRAINTS)
-                stage = STAGES::SELECT_CONSTRAINT; return true;
-        };
-        keyboard['\e'] = [this]() {goBack(); return false;};
     }
 
     void selectConstraint(int j) {
@@ -70,7 +66,7 @@ struct ConstraintsTab : Element {
         } else if(auto d = std::dynamic_pointer_cast<DirectionConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
             int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-            std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << (*d->direction) << std::endl;
+            std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << (*d->direction_point) << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<LimitConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
             std::cout << i << "limit     | joint " << j1 << " min: " << (*d->lim1) << "max: " << (*d->lim2) << std::endl;
@@ -118,9 +114,6 @@ struct ConstraintsTab : Element {
                 TUI::setCursor(Vec2(0, 1));
                 std::cout << "n: new constraint    s: select constraint" << std::flush;
                 int i = printConstraints();
-                TUI::setCursor(Vec2(0, i+1));
-                printMatrix(solver->get_jacobian());
-                printMatrix(solver->get_errors());
                 break;
             }
             case NEW_Constraint:
@@ -151,8 +144,31 @@ struct ConstraintsTab : Element {
 
     // return true if more is expected
     bool firstKeyboardUpdate(char key) override {
-        if(keyboard.find(key) != keyboard.end())
-            return keyboard[key]();
+
+        if(key == '\e') {
+            goBack();
+            return false;
+        }
+
+        switch (stage) {
+            case CONSTRAINTS: {
+                switch (key) {
+                    case 'n':
+                        return false;
+                    case 's':
+                        stage = STAGES::SELECT_CONSTRAINT; 
+                        return true;
+                    default: 
+                        return false;
+                }
+                break;
+            }
+            case CONSTRAINT_SELECTED: {
+
+            }
+            default:
+                break;
+        }
 
         return false;
     }

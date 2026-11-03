@@ -48,7 +48,7 @@ class DistanceConstraint : public Constraint {
         }
 
         std::string editor() override {
-            return "1: joint 1     2: joint 2     d: distance";
+            return "1: joint 1     2: joint 2     d: distance     r: delete";
         }
 
     private:

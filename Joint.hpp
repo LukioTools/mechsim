@@ -22,8 +22,6 @@ struct Joint : Vec2 {
         }
 
         void move(Vec2 delta) {
-            TUI::setCursor(Vec2(0, 120));
-            std::cout << "delta " << delta << std::flush;
             x += delta.x;
             y += delta.y;
         }

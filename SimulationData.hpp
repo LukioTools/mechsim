@@ -58,7 +58,7 @@ struct SimulationData {
             } else if(command == "dir") {
                 constraints->push_back(std::make_shared<DirectionConstraint>((*joints)[std::stoi(data[0])], (*joints)[std::stoi(data[1])], (*joints)[std::stoi(data[2])]));
             } else if(command == "lim") {
-                constraints->push_back(std::make_shared<LimitConstraint>((*joints)[std::stoi(data[0])], (*joints)[std::stoi(data[1])], (*joints)[std::stoi(data[1])]));
+                constraints->push_back(std::make_shared<LimitConstraint>((*joints)[std::stoi(data[0])], (*joints)[std::stoi(data[1])], (*joints)[std::stoi(data[2])]));
             }
         }
 
@@ -109,7 +109,7 @@ struct SimulationData {
                 std::shared_ptr<DirectionConstraint> d = std::dynamic_pointer_cast<DirectionConstraint>(constraint);
                 int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
                 int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-                constraintsFile << "dir " << j1 << " " << j2 << " " << d->direction->x << " " << d->direction->x << std::endl;
+                constraintsFile << "dir " << j1 << " " << j2 << " " << d->direction_point->x << " " << d->direction_point->x << std::endl;
             } else if(typeid(constraint) == typeid(LimitConstraint)) {
                 std::shared_ptr<LimitConstraint> d = std::dynamic_pointer_cast<LimitConstraint>(constraint);
                 int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
