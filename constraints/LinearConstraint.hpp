@@ -5,13 +5,13 @@
 class LinearConstraint : public Constraint {
     public:
         std::shared_ptr<Joint> joint;
-        vec2 position;
-        vec2 direction; // unit vector
+        std::shared_ptr<Vec2> position;
+        std::shared_ptr<Vec2> direction; // unit vector
 
-        LinearConstraint(std::shared_ptr<Joint> j, vec2 p, vec2 dir) : joint(j), position(p), direction(dir) { }
+        LinearConstraint(std::shared_ptr<Joint> j, std::shared_ptr<Vec2> p, std::shared_ptr<Vec2> dir) : joint(j), position(p), direction(dir) { }
 
         float error() override {
-            return -direction.y*(joint->x - position.x) + direction.x*(joint->y - position.y);
+            return -direction->y*(joint->x - position->x) + direction->x*(joint->y - position->y);
         }
 
         void fill_jacobian_row(Eigen::Ref<Eigen::RowVectorXd> row) const override {
@@ -19,8 +19,8 @@ class LinearConstraint : public Constraint {
 
             if(joint->variable_index >= 0) {
                 int k = 2*joint->variable_index;
-                row[k] = -direction.y;
-                row[k+1] = direction.x;
+                row[k] = -direction->y;
+                row[k+1] = direction->x;
             }
         }   
 

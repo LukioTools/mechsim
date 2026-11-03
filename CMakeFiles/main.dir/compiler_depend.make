@@ -5,7 +5,6 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
   tui/Element.hpp \
   tui/Window.hpp \
   tui/WindowStatus.hpp \
-  tui/TUI.hpp \
   tui/TopBar.hpp \
   Joint.hpp \
   Line.hpp \
@@ -23,6 +22,8 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
   solver.hpp \
   tui/ConstraintsTab.hpp \
   tui/JointsTab.hpp \
+  tui/LinkagesTab.hpp \
+  tui/TUI.hpp \
   tui/WindowManager.hpp \
   /usr/include/GLFW/glfw3.h \
   /usr/include/alloca.h \
@@ -1029,6 +1030,10 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
 
 /usr/include/glm/detail/func_common.inl:
 
+/usr/include/glm/ext/matrix_float2x4_precision.hpp:
+
+/usr/include/glm/detail/compute_vector_relational.hpp:
+
 /usr/include/c++/16/cwchar:
 
 /usr/include/eigen3/Eigen/src/Geometry/RotationBase.h:
@@ -1195,8 +1200,6 @@ glad/include/KHR/khrplatform.h:
 
 /usr/include/c++/16/bits/codecvt.h:
 
-/usr/include/c++/16/cwctype:
-
 /usr/include/c++/16/bits/std_abs.h:
 
 /usr/include/c++/16/bits/charconv.h:
@@ -1259,6 +1262,24 @@ glad/include/KHR/khrplatform.h:
 
 /usr/include/c++/16/algorithm:
 
+/usr/include/c++/16/bits/uses_allocator_args.h:
+
+/usr/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h:
+
+/usr/include/c++/16/bits/ranges_base.h:
+
+/usr/include/eigen3/Eigen/src/misc/RealSvd2x2.h:
+
+/usr/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector.h:
+
+/usr/include/bits/xopen_lim.h:
+
+/usr/include/c++/16/bits/stl_construct.h:
+
+/usr/include/glm/ext/quaternion_double_precision.hpp:
+
+/usr/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h:
+
 /usr/include/bits/getopt_posix.h:
 
 /usr/include/errno.h:
@@ -1306,10 +1327,6 @@ tui/JointsTab.hpp:
 /usr/include/c++/16/bits/quoted_string.h:
 
 /usr/include/bits/types/__sigset_t.h:
-
-/usr/include/glm/ext/matrix_float2x4_precision.hpp:
-
-/usr/include/glm/detail/compute_vector_relational.hpp:
 
 /usr/include/glm/mat2x4.hpp:
 
@@ -1361,6 +1378,24 @@ tui/ConstraintsTab.hpp:
 
 /usr/include/bits/math-vector.h:
 
+/usr/include/c++/16/bits/exception_ptr.h:
+
+/usr/include/asm/posix_types.h:
+
+tui/Window.hpp:
+
+/usr/include/bits/time.h:
+
+/usr/include/c++/16/bits/new_allocator.h:
+
+tui/WindowStatus.hpp:
+
+/usr/include/c++/16/backward/binders.h:
+
+/usr/include/bits/types/wint_t.h:
+
+/usr/include/eigen3/Eigen/src/Core/ReturnByValue.h:
+
 /usr/include/c++/16/memory:
 
 /usr/include/eigen3/Eigen/SVD:
@@ -1371,9 +1406,45 @@ tui/ConstraintsTab.hpp:
 
 /usr/include/c++/16/bits/invoke.h:
 
+/usr/include/asm/bitsperlong.h:
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h:
+
+/usr/include/c++/16/bits/stl_bvector.h:
+
+/usr/include/asm/ioctls.h:
+
+/usr/include/c++/16/bits/functional_hash.h:
+
+/usr/include/c++/16/bits/hashtable_policy.h:
+
+tui/Element.hpp:
+
+/usr/include/eigen3/Eigen/src/Core/StlIterators.h:
+
+/usr/include/bits/long-double.h:
+
+/usr/include/glm/ext/vector_bool2_precision.hpp:
+
+/usr/include/eigen3/Eigen/Core:
+
+/usr/include/asm/types.h:
+
 /usr/include/bits/types/struct_FILE.h:
 
 /usr/include/bits/endianness.h:
+
+/usr/include/bits/floatn.h:
+
+/usr/include/c++/16/bits/vector.tcc:
+
+/usr/include/eigen3/Eigen/src/Householder/HouseholderSequence.h:
+
+/usr/include/c++/16/bits/stl_list.h:
+
+tui/WindowManager.hpp:
+
+/usr/include/c++/16/bits/locale_classes.tcc:
 
 /usr/include/c++/16/bits/stl_vector.h:
 
@@ -1394,48 +1465,6 @@ tui/ConstraintsTab.hpp:
 /usr/include/bits/uio_lim.h:
 
 /usr/include/c++/16/ext/type_traits.h:
-
-/usr/include/bits/floatn.h:
-
-/usr/include/c++/16/bits/vector.tcc:
-
-/usr/include/eigen3/Eigen/src/Householder/HouseholderSequence.h:
-
-/usr/include/c++/16/bits/stl_list.h:
-
-tui/WindowManager.hpp:
-
-/usr/include/c++/16/bits/locale_classes.tcc:
-
-/usr/include/asm/posix_types.h:
-
-tui/Window.hpp:
-
-/usr/include/bits/time.h:
-
-/usr/include/c++/16/bits/exception_ptr.h:
-
-/usr/include/bits/wordsize.h:
-
-/usr/include/c++/16/stdexcept:
-
-/usr/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.inc:
-
-/usr/include/c++/16/bits/new_allocator.h:
-
-tui/WindowStatus.hpp:
-
-/usr/include/c++/16/backward/binders.h:
-
-/usr/include/bits/types/wint_t.h:
-
-/usr/include/glm/ext/vector_bool2_precision.hpp:
-
-/usr/include/asm/types.h:
-
-/usr/include/eigen3/Eigen/Core:
-
-/usr/include/eigen3/Eigen/src/Core/ReturnByValue.h:
 
 /usr/include/bits/posix_opt.h:
 
@@ -1479,23 +1508,17 @@ tui/WindowStatus.hpp:
 
 /usr/include/bits/types/time_t.h:
 
-/usr/include/asm/bitsperlong.h:
+Shader/Shader.hpp:
 
-/usr/include/eigen3/Eigen/src/Core/Ref.h:
+/usr/include/glm/ext/quaternion_trigonometric.inl:
 
-/usr/include/c++/16/bits/stl_bvector.h:
+/usr/include/assert.h:
 
-/usr/include/asm/ioctls.h:
+/usr/include/asm/ioctl.h:
 
-/usr/include/c++/16/bits/functional_hash.h:
+/usr/include/eigen3/Eigen/Householder:
 
-/usr/include/c++/16/bits/hashtable_policy.h:
-
-tui/Element.hpp:
-
-/usr/include/eigen3/Eigen/src/Core/StlIterators.h:
-
-/usr/include/bits/long-double.h:
+/usr/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h:
 
 /usr/include/c++/16/bits/max_size_type.h:
 
@@ -1510,18 +1533,6 @@ Joint.hpp:
 /usr/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h:
 
 /usr/include/c++/16/bits/memory_resource.h:
-
-/usr/include/glm/ext/quaternion_trigonometric.inl:
-
-/usr/include/assert.h:
-
-/usr/include/asm/ioctl.h:
-
-/usr/include/eigen3/Eigen/Householder:
-
-/usr/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h:
-
-Shader/Shader.hpp:
 
 /usr/include/c++/16/cassert:
 
@@ -1550,6 +1561,12 @@ Shader/Shader.hpp:
 constraints/LinearConstraint.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/DiagonalProduct.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/c++/16/stdexcept:
+
+/usr/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.inc:
 
 /usr/include/sched.h:
 
@@ -1601,33 +1618,25 @@ constraints/LimitConstraint.hpp:
 
 /usr/include/bits/mathcalls-macros.h:
 
+/usr/include/c++/16/bits/ranges_algo.h:
+
+/usr/include/c++/16/bits/ostream_insert.h:
+
 /usr/include/bits/pthreadtypes-arch.h:
 
 /usr/include/glm/ext/vector_double2.hpp:
 
 /usr/include/c++/16/bits/atomic_wait.h:
 
+Vec2.hpp:
+
 /usr/include/bits/pthread_stack_min-dynamic.h:
 
 tui/TUI.hpp:
 
-Vec2.hpp:
-
 /usr/include/eigen3/Eigen/src/Core/Assign.h:
 
 /usr/include/bits/pthreadtypes.h:
-
-/usr/include/c++/16/bits/stl_construct.h:
-
-/usr/include/bits/xopen_lim.h:
-
-/usr/include/glm/ext/quaternion_double_precision.hpp:
-
-/usr/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h:
-
-/usr/include/c++/16/bits/cxxabi_forced.h:
-
-/usr/include/asm-generic/ioctl.h:
 
 /usr/include/bits/types/__FILE.h:
 
@@ -1759,6 +1768,12 @@ constraints/Constraint.hpp:
 
 /usr/include/bits/types/struct_itimerspec.h:
 
+/usr/include/asm-generic/ioctl.h:
+
+/usr/include/c++/16/bits/cxxabi_forced.h:
+
+/usr/include/c++/16/cwctype:
+
 /usr/include/bits/types/struct_sched_param.h:
 
 /usr/include/linux/sockios.h:
@@ -1779,25 +1794,11 @@ constraints/Constraint.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/MapBase.h:
 
-/usr/include/bits/posix2_lim.h:
-
 /usr/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h:
 
+/usr/include/bits/posix2_lim.h:
+
 /usr/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h:
-
-/usr/include/c++/16/bits/uses_allocator_args.h:
-
-/usr/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h:
-
-/usr/include/c++/16/bits/ranges_base.h:
-
-/usr/include/c++/16/bits/ostream_insert.h:
-
-/usr/include/c++/16/bits/ranges_algo.h:
-
-/usr/include/eigen3/Eigen/src/misc/RealSvd2x2.h:
-
-/usr/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector.h:
 
 LineRenderer.hpp:
 
@@ -1894,6 +1895,8 @@ LineRenderer.hpp:
 /usr/include/glm/detail/type_vec1.inl:
 
 /usr/include/c++/16/tr1/special_function_util.h:
+
+tui/LinkagesTab.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/Matrix.h:
 
@@ -2203,9 +2206,9 @@ LineRenderer.hpp:
 
 /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h:
 
-/usr/include/bits/stdint-intn.h:
-
 /usr/include/bits/wctype-wchar.h:
+
+/usr/include/bits/stdint-intn.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/AlignedBox.h:
 

@@ -6,7 +6,6 @@ CMakeFiles/main.dir/main.cpp.o
  /home/hiha/developer/mechsim/tui/Element.hpp
  /home/hiha/developer/mechsim/tui/Window.hpp
  /home/hiha/developer/mechsim/tui/WindowStatus.hpp
- /home/hiha/developer/mechsim/tui/TUI.hpp
  /home/hiha/developer/mechsim/tui/TopBar.hpp
  /home/hiha/developer/mechsim/Joint.hpp
  /home/hiha/developer/mechsim/Line.hpp
@@ -24,6 +23,8 @@ CMakeFiles/main.dir/main.cpp.o
  /home/hiha/developer/mechsim/solver.hpp
  /home/hiha/developer/mechsim/tui/ConstraintsTab.hpp
  /home/hiha/developer/mechsim/tui/JointsTab.hpp
+ /home/hiha/developer/mechsim/tui/LinkagesTab.hpp
+ /home/hiha/developer/mechsim/tui/TUI.hpp
  /home/hiha/developer/mechsim/tui/WindowManager.hpp
  /usr/include/GLFW/glfw3.h
  /usr/include/alloca.h

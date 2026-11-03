@@ -13,6 +13,8 @@
 #include "../constraints/DirectionConstraint.hpp"
 #include "../constraints/LimitConstraint.hpp"
 #include "../constraints/LinearConstraint.hpp"
+#include "../SimulationData.hpp"
+#include "../solver.hpp"
 
 
 struct ConstraintsTab : Element {
@@ -28,14 +30,15 @@ struct ConstraintsTab : Element {
     bool inputInterfaceOpen = false;
     std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> constraints;
     std::shared_ptr<std::vector<std::shared_ptr<Joint>>> joints;
+    std::shared_ptr<Solver> solver;
 
     std::shared_ptr<Constraint> selectedConstraint;
 
     std::string inputData;
     STAGES stage = CONSTRAINTS;
 
-    vec2 screenSize;
-    ConstraintsTab(vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> cst, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js) : screenSize(size), constraints(cst), joints(js) {
+    Vec2 screenSize;
+    ConstraintsTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> cst, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js, std::shared_ptr<Solver> s) : screenSize(size), constraints(cst), joints(js), solver(s) {
             
         keyboard['s'] = [this]() {
             if(stage == CONSTRAINTS)
@@ -60,17 +63,17 @@ struct ConstraintsTab : Element {
         if(auto d = std::dynamic_pointer_cast<DistanceConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
             int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-            std::cout << i << "distance  | first joint: " << j1 << " second joint: " << j2 << " distance: " << d->target_distance << std::endl;
+            std::cout << i << "distance  | first joint: " << j1 << " second joint: " << j2 << " distance: " << d->target_distance->length() << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<LinearConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
-            std::cout << i << "linear    | joint: " << j1 << " position: " << d->position << " direction: " << d->direction << std::endl;
+            std::cout << i << "linear    | joint: " << j1 << " position: " << (*d->position) << " direction: " << (*d->direction) << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<DirectionConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
             int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-            std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << d->direction << std::endl;
+            std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << (*d->direction) << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<LimitConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
-            std::cout << i << "limit     | joint " << j1 << " min: " << d->lim1 << "max: " << d->lim2 << std::endl;
+            std::cout << i << "limit     | joint " << j1 << " min: " << (*d->lim1) << "max: " << (*d->lim2) << std::endl;
         }
     }
 
@@ -98,36 +101,41 @@ struct ConstraintsTab : Element {
         }
     }
     
-    void printConstraints() {
+    int printConstraints() {
         int startIndex = 2;
         for (auto& constraint : (*constraints)) {
-            TUI::setCursor(vec2(0,startIndex));
+            TUI::setCursor(Vec2(0,startIndex));
             printConstraint(constraint, startIndex-1);
             startIndex++;
         }
+        return startIndex;
     }
 
     WindowStatus update() override {
 
         switch (stage) {
-            case CONSTRAINTS:
-                TUI::setCursor(vec2(0, 1));
+            case CONSTRAINTS: {
+                TUI::setCursor(Vec2(0, 1));
                 std::cout << "n: new constraint    s: select constraint" << std::flush;
-                printConstraints();
+                int i = printConstraints();
+                TUI::setCursor(Vec2(0, i+1));
+                printMatrix(solver->get_jacobian());
+                printMatrix(solver->get_errors());
                 break;
+            }
             case NEW_Constraint:
                 break;
             case SELECT_CONSTRAINT:
-                TUI::setCursor(vec2(0,1));
+                TUI::setCursor(Vec2(0,1));
                 TUI::setFGColor(255, 0, 0);
                 std::cout << "select joint index: " << inputData << std::flush;
                 TUI::resetColor();
                 printConstraints();
                 break;
             case CONSTRAINT_SELECTED:
-                TUI::setCursor(vec2(0,1));
+                TUI::setCursor(Vec2(0,1));
                 std::cout << selectedConstraint->editor() << std::flush;
-                TUI::setCursor(vec2(0,2));
+                TUI::setCursor(Vec2(0,2));
                 printConstraint(selectedConstraint);
                 break;
             case EXIT:

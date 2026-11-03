@@ -38,7 +38,7 @@ struct TUI {
         CLEAR_TERMINAL();
     }
 
-    static inline void setCursor(vec2 pos) {
+    static inline void setCursor(Vec2 pos) {
         std::cout << MOVE_TO_COORDINATES(pos.x, pos.y);
     }
 
@@ -58,9 +58,9 @@ struct TUI {
         std::cout << RESET_COLOR << std::endl;
     }
 
-    static vec2 ScreenSize(){
+    static Vec2 ScreenSize(){
         winsize w;
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-        return vec2(w.ws_col, w.ws_row);
+        return Vec2(w.ws_col, w.ws_row);
     }
 };

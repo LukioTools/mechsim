@@ -27,6 +27,7 @@
 #include "./tui/TopBar.hpp"
 #include "tui/ConstraintsTab.hpp"
 #include "tui/JointsTab.hpp"
+#include "tui/LinkagesTab.hpp"
 #include "tui/WindowManager.hpp"
 #include "tui/WindowStatus.hpp"
 
@@ -70,7 +71,7 @@ int window_init(GLFWwindow** window) {
     return 0;
 }
 
-vec2 cursorPos(0,0);
+Vec2 cursorPos(0,0);
 int windowHeight = 0;
 std::string userInputs;
 bool IsLeftMouseButtonPressed;
@@ -119,14 +120,14 @@ int main() {
 
     simulationData.loadFromFiles();
     
-    Solver solver;
+    std::shared_ptr<Solver> solver = std::make_shared<Solver>();
 
     glfwSetCursorPosCallback(window, cursor_position_callback);
 
-    vec2 terminalSize = TUI::ScreenSize(); 
+    Vec2 terminalSize = TUI::ScreenSize(); 
     std::shared_ptr<Window> jointsWindow = std::make_shared<JointsTab>(terminalSize, simulationData.joints);
-    std::shared_ptr<Window> linkagesWindow = std::make_shared<JointsTab>(terminalSize, simulationData.joints);
-    std::shared_ptr<Window> constraintsWindow = std::make_shared<ConstraintsTab>(terminalSize, simulationData.constraints, simulationData.joints);
+    std::shared_ptr<Window> linkagesWindow = std::make_shared<linkagesTab>(terminalSize, simulationData.linkages, simulationData.joints);
+    std::shared_ptr<Window> constraintsWindow = std::make_shared<ConstraintsTab>(terminalSize, simulationData.constraints, simulationData.joints, solver);
     
     std::shared_ptr<Window> topBarWindow = std::make_shared<TopBar>(jointsWindow, linkagesWindow, constraintsWindow);
 
@@ -143,8 +144,8 @@ int main() {
     ENABLE_ALT_BUF();
 
     bool leftDragging = false;
-    vec2 initPosLeft;
-    vec2 offset;
+    Vec2 initPosLeft;
+    Vec2 offset;
 
     LineRenderer::init();
 
@@ -161,7 +162,7 @@ int main() {
         }
 
         if (leftDragging) {
-            vec2 realOffset = offset + (cursorPos - initPosLeft);
+            Vec2 realOffset = offset + (cursorPos - initPosLeft);
 
             if (!IsLeftMouseButtonPressed) {
                 offset = realOffset;
@@ -169,7 +170,7 @@ int main() {
             }
         }
 
-        vec2 realOffset = offset;
+        Vec2 realOffset = offset;
 
         if(leftDragging) {
             realOffset = offset + (cursorPos - initPosLeft);
@@ -177,6 +178,8 @@ int main() {
 
 
         glm::mat4 projection = glm::ortho(0.0f - realOffset.x, (float)(width*cursorScaling) - realOffset.x, 0.0f - realOffset.y, (float)(windowHeight*cursorScaling) - realOffset.y, -1.0f, 1.0f);
+
+        (*simulationData.joints)[0]->setPosition(cursorPos*cursorScaling-realOffset);
 
         for (std::shared_ptr<LineRenderer> line : (*simulationData.linkages)) {
             line->draw(projection);
@@ -190,12 +193,21 @@ int main() {
         }
 
         // Solver:
+        TUI::setCursor(Vec2(70, 0));
+        std::cout << "before solving: " << status.stopSimulation << std::flush;
         if(!status.stopSimulation) {
-            solver.updateConstraints(simulationData.constraints);
-            bool fixed_result = solver.solve(100);
+            solver->updateConstraints(simulationData.constraints);
+            bool fixed_result = solver->solve(1000);
             if(fixed_result) {
-                TUI::setCursor(vec2(70, 0));
+                TUI::setCursor(Vec2(100, 0));
+                std::cout << "solved" << std::flush;
+            } else {
+                TUI::setCursor(Vec2(100, 0));
+                std::cout << "unsolved" << std::flush;
             }
+        } else {
+            TUI::setCursor(Vec2(100, 0));
+            std::cout << "paused" << std::flush;
         }
 
         glfwSwapBuffers(window);

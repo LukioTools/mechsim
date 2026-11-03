@@ -8,16 +8,16 @@ class DistanceConstraint : public Constraint {
     public:
         std::shared_ptr<Joint> j1;
         std::shared_ptr<Joint> j2;
-        float target_distance;
+        std::shared_ptr<Vec2> target_distance;
 
-        DistanceConstraint(std::shared_ptr<Joint> joint1, std::shared_ptr<Joint> joint2, float distance)
+        DistanceConstraint(std::shared_ptr<Joint> joint1, std::shared_ptr<Joint> joint2, std::shared_ptr<Joint> distance)
             : j1(joint1), j2(joint2), target_distance(distance) {}
 
         float error() override {
             float dx = j2->x - j1->x;
             float dy = j2->y - j1->y;
 
-            return sqrt(dx*dx + dy*dy)-target_distance;
+            return sqrt(dx*dx + dy*dy)-target_distance->length();
         }
 
         void fill_jacobian_row(Eigen::Ref<Eigen::RowVectorXd> row) const override {
@@ -52,7 +52,7 @@ class DistanceConstraint : public Constraint {
         }
 
     private:
-        vec2 distance() {
-            return vec2(j2->x - j1->x, j2->y - j1->y);
+        Vec2 distance() {
+            return Vec2(j2->x - j1->x, j2->y - j1->y);
         }
 };

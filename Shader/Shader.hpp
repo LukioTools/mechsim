@@ -95,7 +95,7 @@ public:
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
     }
     // ------------------------------------------------------------------------
-    void setVec2(const std::string &name, vec2 value) const
+    void setVec2(const std::string &name, Vec2 value) const
     { 
         glUniform2f(glGetUniformLocation(ID, name.c_str()), value.x, value.y); 
     }

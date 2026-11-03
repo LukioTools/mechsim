@@ -548,6 +548,17 @@ CMakeFiles/main.dir/main.cpp.o: /home/hiha/developer/mechsim/main.cpp \
  /home/hiha/developer/mechsim/SimulationData.hpp \
  /home/hiha/developer/mechsim/Joint.hpp \
  /home/hiha/developer/mechsim/Vec2.hpp \
+ /home/hiha/developer/mechsim/tui/TUI.hpp /usr/include/sys/ioctl.h \
+ /usr/include/bits/ioctls.h /usr/include/asm/ioctls.h \
+ /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
+ /usr/include/asm/ioctl.h /usr/include/asm-generic/ioctl.h \
+ /usr/include/linux/sockios.h /usr/include/asm/sockios.h \
+ /usr/include/asm-generic/sockios.h /usr/include/bits/ioctl-types.h \
+ /usr/include/sys/ttydefaults.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/bits/getopt_posix.h \
+ /usr/include/bits/getopt_core.h /usr/include/bits/unistd_ext.h \
+ /usr/include/linux/close_range.h \
  /home/hiha/developer/mechsim/LineRenderer.hpp \
  /home/hiha/developer/mechsim/Shader/Shader.hpp \
  /home/hiha/developer/mechsim/glad/include/glad/glad.h \
@@ -617,23 +628,13 @@ CMakeFiles/main.dir/main.cpp.o: /home/hiha/developer/mechsim/main.cpp \
  /usr/include/c++/16/bits/locale_conv.h \
  /usr/include/c++/16/bits/quoted_string.h \
  /home/hiha/developer/mechsim/Line.hpp \
- /home/hiha/developer/mechsim/./tui/TUI.hpp /usr/include/sys/ioctl.h \
- /usr/include/bits/ioctls.h /usr/include/asm/ioctls.h \
- /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
- /usr/include/asm/ioctl.h /usr/include/asm-generic/ioctl.h \
- /usr/include/linux/sockios.h /usr/include/asm/sockios.h \
- /usr/include/asm-generic/sockios.h /usr/include/bits/ioctl-types.h \
- /usr/include/sys/ttydefaults.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
- /usr/include/bits/confname.h /usr/include/bits/getopt_posix.h \
- /usr/include/bits/getopt_core.h /usr/include/bits/unistd_ext.h \
- /usr/include/linux/close_range.h \
  /home/hiha/developer/mechsim/./tui/TopBar.hpp \
  /home/hiha/developer/mechsim/./tui/./Element.hpp \
  /home/hiha/developer/mechsim/./tui/./Window.hpp \
  /home/hiha/developer/mechsim/./tui/./WindowStatus.hpp \
  /home/hiha/developer/mechsim/tui/ConstraintsTab.hpp \
  /home/hiha/developer/mechsim/tui/JointsTab.hpp \
+ /home/hiha/developer/mechsim/tui/LinkagesTab.hpp \
  /home/hiha/developer/mechsim/tui/WindowManager.hpp \
  /usr/include/c++/16/list /usr/include/c++/16/bits/stl_list.h \
  /usr/include/c++/16/bits/list.tcc

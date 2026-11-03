@@ -38,7 +38,7 @@ void printMatrix(const Eigen::MatrixXd& M)
     }
 }
 
-class Solver {
+struct Solver {
     std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> constraints;
     std::vector<std::shared_ptr<Joint>> joints;
     int max_variable_index;
@@ -120,58 +120,56 @@ class Solver {
         }
     }
 
-    public:
+    void updateConstraints(std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> ctrs) {
+        constraints = ctrs;
+        max_variable_index = assign_variable_indexes();
+        get_joints();
+    }
 
-        void updateConstraints(std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> ctrs) {
-            constraints = ctrs;
-            max_variable_index = assign_variable_indexes();
-            get_joints();
-        }
+    bool solve(int max_iterations = 50) {
 
-        bool solve(int max_iterations = 50) {
+        Eigen::IOFormat format(
+            6,                  // Precision
+            Eigen::DontAlignCols,
+            " ",                // Coefficient separator
+            "\n",               // Row separator
+            "",                 // Row prefix
+            "",                 // Row suffix
+            "",                 // Matrix prefix
+            ""                  // Matrix suffix
+        );
 
-            Eigen::IOFormat format(
-                6,                  // Precision
-                Eigen::DontAlignCols,
-                " ",                // Coefficient separator
-                "\n",               // Row separator
-                "",                 // Row prefix
-                "",                 // Row suffix
-                "",                 // Matrix prefix
-                ""                  // Matrix suffix
-            );
+        setStartPositions();
 
-            setStartPositions();
+        for (int iteration = 0; iteration < max_iterations; iteration++) {
+            Eigen::MatrixXd J = get_jacobian();
+            Eigen::VectorXd errors = get_errors();
 
-            for (int iteration = 0; iteration < max_iterations; iteration++) {
-                Eigen::MatrixXd J = get_jacobian();
-                Eigen::VectorXd errors = get_errors();
+            /*
+            std::cout << "\n\nerror: \n" << '\n';
+            printMatrix(errors);
 
-                /*
-                std::cout << "\n\nerror: \n" << '\n';
-                printMatrix(errors);
+            std::cout << "derivate: \n";
+            printMatrix(J);
+            */
 
-                std::cout << "derivate: \n";
-                printMatrix(J);
-                */
-
-                if(checkTolerances(errors, 0.01)) {
-                    return true;
-                }
-
-                Eigen::MatrixXd A = J*J.transpose();
-
-                Eigen::VectorXd delta_q = -J.transpose() * A.ldlt().solve(errors);
-
-                for (std::shared_ptr<Joint> joint : joints) {
-                   if(joint->variable_index == grounded) continue;
-                   
-                   int k = 2 * joint->variable_index;
-                   vec2 delta = vec2(delta_q(k), delta_q(k+1));
-                   joint->move(delta);
-                }
+            if(checkTolerances(errors, 0.01)) {
+                return true;
             }
-            resetPositions();
-            return false;
+
+            Eigen::MatrixXd A = J*J.transpose();
+
+            Eigen::VectorXd delta_q = -J.transpose() * A.ldlt().solve(errors);
+
+            for (std::shared_ptr<Joint> joint : joints) {
+                if(joint->variable_index == grounded) continue;
+                
+                int k = 2 * joint->variable_index;
+                Vec2 delta = Vec2(delta_q(k), delta_q(k+1));
+                joint->move(delta);
+            }
         }
+        //resetPositions();
+        return false;
+    }
 };

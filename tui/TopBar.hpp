@@ -26,7 +26,7 @@ struct TopBar : Element {
 
     
     WindowStatus update() override {
-        TUI::setCursor(vec2(0, 0));
+        TUI::setCursor(Vec2(0, 0));
         if(!isPaused)
             std::cout << "1: joints     2: linkages     3: constraints     p: pause simulation" << std::endl;
         else

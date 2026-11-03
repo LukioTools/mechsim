@@ -41,9 +41,9 @@ struct LineRenderer {
 
         shader.setMat4("u_projection", projection);
         shader.setInt("spriteTexture", 0);
-        shader.setVec2("point1", (vec2)*j1);
+        shader.setVec2("point1", (Vec2)*j1);
         
-        shader.setVec2("point2", (vec2)*j2);
+        shader.setVec2("point2", (Vec2)*j2);
         shader.setFloat("thickness", thickness);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);

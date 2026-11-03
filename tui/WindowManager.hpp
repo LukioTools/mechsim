@@ -17,11 +17,11 @@ struct WindowManager {
     std::vector<std::shared_ptr<Window>> openWindows;
     std::shared_ptr<Window> activeWindow;
 
-    vec2 screenSize;
+    Vec2 screenSize;
 
     bool moreToCome = false;
     
-    WindowManager(vec2 ss) : screenSize(ss) { }
+    WindowManager(Vec2 ss) : screenSize(ss) { }
 
     void openWindow(std::shared_ptr<Window> window) {
         openWindows.push_back(window);

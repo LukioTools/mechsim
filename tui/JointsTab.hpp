@@ -3,12 +3,12 @@
 #include "./Element.hpp"
 #include "../Vec2.hpp"
 #include "./TUI.hpp"
-#include <algorithm>
 #include <memory>
 #include <ostream>
 #include <string>
 #include "../Joint.hpp"
 #include "WindowStatus.hpp"
+#include "../SimulationData.hpp"
 
 struct JointsTab : Element {
 
@@ -29,8 +29,8 @@ struct JointsTab : Element {
     std::string inputData;
     STAGES stage = JOINTS;
 
-    vec2 screenSize;
-    JointsTab(vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js) : screenSize(size), joints(js) {
+    Vec2 screenSize;
+    JointsTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js) : screenSize(size), joints(js) {
             
         keyboard['s'] = [this]() {
             if(stage == JOINTS)
@@ -50,8 +50,10 @@ struct JointsTab : Element {
             return false;
         };
         keyboard['d'] = [this]() {
-            joints->erase(joints->begin()+selectedJoint);
-            goBack();
+            if (stage == JOINT_SELECTED) {
+                joints->erase(joints->begin()+selectedJoint);
+                goBack();
+            }
             return false;
         };
         keyboard['\e'] = [this]() {goBack(); return false;};
@@ -99,7 +101,7 @@ struct JointsTab : Element {
     void printJoints() {
         int startIndex = 2;
         for (auto& joint : *joints) {
-            TUI::setCursor(vec2(0,startIndex));
+            TUI::setCursor(Vec2(0,startIndex));
             std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << ", used :" << !joint.unique() << std::flush;
             startIndex++;
         }
@@ -108,32 +110,32 @@ struct JointsTab : Element {
     WindowStatus update() override {
         switch (stage) {
             case JOINTS:
-                TUI::setCursor(vec2(0, 1));
+                TUI::setCursor(Vec2(0, 1));
                 std::cout << "n: new joint    s: select joint" << std::flush;
                 printJoints();
                 break;
             case NEW_JOINT:
                 break;
             case SELECT_JOINT:
-                TUI::setCursor(vec2(0,1));
+                TUI::setCursor(Vec2(0,1));
                 TUI::setFGColor(255, 0, 0);
                 std::cout << "select joint index: " << inputData << std::flush;
                 TUI::resetColor();
                 printJoints();
                 break;
             case JOINT_SELECTED:
-                TUI::setCursor(vec2(0,1));
+                TUI::setCursor(Vec2(0,1));
                 std::cout << "p: edit position     g: toggle ground     i: toggle input     d: delete" << std::flush;
-                TUI::setCursor(vec2(0,2));
+                TUI::setCursor(Vec2(0,2));
                 std::cout << "joint: " << "position: " << *(*joints)[selectedJoint] << ", is ground: " << (*joints)[selectedJoint]->is_ground << ", is input: " << (*joints)[selectedJoint]->is_input << " used: " << !(*joints)[selectedJoint].unique() << std::flush;
                 break;
             case EDIT_POSITION:
-                TUI::setCursor(vec2(0,1));
+                TUI::setCursor(Vec2(0,1));
                 TUI::setFGColor(255, 0, 0);
                 std::cout << "position: " << inputData << std::flush;
                 TUI::resetColor();
                 
-                TUI::setCursor(vec2(0,2));
+                TUI::setCursor(Vec2(0,2));
                 std::cout << "joint: " << "position: " << (*joints)[selectedJoint] << ", is ground: " << (*joints)[selectedJoint]->is_ground << ", is input: " << (*joints)[selectedJoint]->is_input << std::flush;
                 return WindowStatus(true, nullptr, true);
                 
