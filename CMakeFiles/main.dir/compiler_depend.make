@@ -6,6 +6,7 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
   tui/Window.hpp \
   tui/WindowStatus.hpp \
   tui/TopBar.hpp \
+  DynamicJoint.hpp \
   Joint.hpp \
   Line.hpp \
   LineRenderer.hpp \
@@ -1034,9 +1035,7 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
 
 /usr/include/glm/detail/compute_vector_relational.hpp:
 
-/usr/include/c++/16/cwchar:
-
-/usr/include/eigen3/Eigen/src/Geometry/RotationBase.h:
+/usr/include/glm/detail/compute_vector_decl.hpp:
 
 /usr/include/c++/16/cstdint:
 
@@ -1103,8 +1102,6 @@ glad/include/KHR/khrplatform.h:
 /usr/include/c++/16/bits/stl_uninitialized.h:
 
 /usr/include/c++/16/cstring:
-
-/usr/include/c++/16/bits/specfun.h:
 
 /usr/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix.h:
 
@@ -1280,9 +1277,11 @@ glad/include/KHR/khrplatform.h:
 
 /usr/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h:
 
-/usr/include/bits/getopt_posix.h:
+/usr/include/bits/wordsize.h:
 
-/usr/include/errno.h:
+/usr/include/c++/16/stdexcept:
+
+/usr/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.inc:
 
 /usr/include/bits/getopt_core.h:
 
@@ -1396,6 +1395,12 @@ tui/WindowStatus.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/ReturnByValue.h:
 
+/usr/include/sys/single_threaded.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/c++/16/bits/stl_vector.h:
+
 /usr/include/c++/16/memory:
 
 /usr/include/eigen3/Eigen/SVD:
@@ -1405,24 +1410,6 @@ tui/WindowStatus.hpp:
 /usr/include/bits/floatn-common.h:
 
 /usr/include/c++/16/bits/invoke.h:
-
-/usr/include/asm/bitsperlong.h:
-
-/usr/include/eigen3/Eigen/src/Core/Ref.h:
-
-/usr/include/c++/16/bits/stl_bvector.h:
-
-/usr/include/asm/ioctls.h:
-
-/usr/include/c++/16/bits/functional_hash.h:
-
-/usr/include/c++/16/bits/hashtable_policy.h:
-
-tui/Element.hpp:
-
-/usr/include/eigen3/Eigen/src/Core/StlIterators.h:
-
-/usr/include/bits/long-double.h:
 
 /usr/include/glm/ext/vector_bool2_precision.hpp:
 
@@ -1445,12 +1432,6 @@ tui/Element.hpp:
 tui/WindowManager.hpp:
 
 /usr/include/c++/16/bits/locale_classes.tcc:
-
-/usr/include/c++/16/bits/stl_vector.h:
-
-/usr/include/sys/single_threaded.h:
-
-/usr/include/asm-generic/errno.h:
 
 /usr/include/bits/ioctl-types.h:
 
@@ -1520,6 +1501,24 @@ Shader/Shader.hpp:
 
 /usr/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h:
 
+/usr/include/asm/bitsperlong.h:
+
+/usr/include/eigen3/Eigen/src/Core/Ref.h:
+
+/usr/include/c++/16/bits/stl_bvector.h:
+
+/usr/include/asm/ioctls.h:
+
+/usr/include/c++/16/bits/functional_hash.h:
+
+/usr/include/c++/16/bits/hashtable_policy.h:
+
+tui/Element.hpp:
+
+/usr/include/eigen3/Eigen/src/Core/StlIterators.h:
+
+/usr/include/bits/long-double.h:
+
 /usr/include/c++/16/bits/max_size_type.h:
 
 /usr/include/eigen3/Eigen/src/plugins/IndexedViewMethods.inc:
@@ -1562,11 +1561,13 @@ constraints/LinearConstraint.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/DiagonalProduct.h:
 
-/usr/include/bits/wordsize.h:
+/usr/include/c++/16/bits/specfun.h:
 
-/usr/include/c++/16/stdexcept:
+DynamicJoint.hpp:
 
-/usr/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.inc:
+/usr/include/c++/16/x86_64-pc-linux-gnu/bits/cpu_defines.h:
+
+/usr/include/eigen3/Eigen/src/SVD/InternalHeaderCheck.h:
 
 /usr/include/sched.h:
 
@@ -1589,6 +1590,10 @@ main.cpp:
 /usr/include/c++/16/clocale:
 
 /usr/include/eigen3/Eigen/src/Core/BandMatrix.h:
+
+/usr/include/bits/getopt_posix.h:
+
+/usr/include/errno.h:
 
 /usr/include/c++/16/bits/ios_base.h:
 
@@ -1647,8 +1652,6 @@ tui/TUI.hpp:
 /usr/include/c++/16/bits/atomic_base.h:
 
 /usr/include/bits/types/cookie_io_functions_t.h:
-
-/usr/include/glm/detail/compute_vector_decl.hpp:
 
 /usr/include/bits/select.h:
 
@@ -1800,6 +1803,10 @@ constraints/Constraint.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h:
 
+/usr/include/c++/16/cwchar:
+
+/usr/include/eigen3/Eigen/src/Geometry/RotationBase.h:
+
 LineRenderer.hpp:
 
 /usr/include/c++/16/pstl/execution_defs.h:
@@ -1925,10 +1932,6 @@ tui/LinkagesTab.hpp:
 /usr/include/eigen3/Eigen/src/Core/util/Memory.h:
 
 /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h:
-
-/usr/include/c++/16/x86_64-pc-linux-gnu/bits/cpu_defines.h:
-
-/usr/include/eigen3/Eigen/src/SVD/InternalHeaderCheck.h:
 
 /usr/include/c++/16/x86_64-pc-linux-gnu/bits/ctype_inline.h:
 
@@ -2206,9 +2209,9 @@ tui/LinkagesTab.hpp:
 
 /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h:
 
-/usr/include/bits/wctype-wchar.h:
-
 /usr/include/bits/stdint-intn.h:
+
+/usr/include/bits/wctype-wchar.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/AlignedBox.h:
 

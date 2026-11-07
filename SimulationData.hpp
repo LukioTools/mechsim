@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DynamicJoint.hpp"
 #include "Joint.hpp"
 #include "LineRenderer.hpp"
 #include "Vec2.hpp"
@@ -18,6 +19,26 @@ struct SimulationData {
     std::shared_ptr<std::vector<std::shared_ptr<Joint>>> joints;
     std::shared_ptr<std::vector<std::shared_ptr<LineRenderer>>> linkages;
     std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> constraints;
+
+    static DynamicJoint::Operator getOperator(char oper) {
+        switch (oper) {
+            case '+': return DynamicJoint::ADDITION;
+            case '-': return DynamicJoint::SUBSTRACTION;
+            case '*': return DynamicJoint::MULTIPLICATION;
+            case '/': return DynamicJoint::DIVITION;
+        }
+        return DynamicJoint::ADDITION;
+    }
+
+    static char FromOperator(DynamicJoint::Operator oper) {
+        switch (oper) {
+            case DynamicJoint::ADDITION: return '+';
+            case DynamicJoint::SUBSTRACTION: return '-';
+            case DynamicJoint::MULTIPLICATION: return '*';
+            case DynamicJoint::DIVITION: return '/';
+        }
+        return '+';
+    }
 
     void loadFromFiles() {
         std::ifstream jointsFile("save/joints.txt", std::ios_base::in);
@@ -38,16 +59,23 @@ struct SimulationData {
 
         while (std::getline(jointsFile, line)) {
             std::vector<std::string> data = splitString(line, ' ');
-            int x = std::stoi(data[0]);
-            int y = std::stoi(data[1]);
-            bool is_ground = (bool)std::stoi(data[2]);
-            bool is_input = (bool)std::stoi(data[3]);
-            joints->push_back(std::make_shared<Joint>(Vec2(x,y), is_ground, is_input));
+            if(data[0] == "s") {
+                std::cout << "static" << std::endl;
+                int x = std::stoi(data[1]);
+                int y = std::stoi(data[2]);
+                bool is_ground = (bool)std::stoi(data[3]);
+                bool is_input = (bool)std::stoi(data[4]);
+                joints->push_back(std::make_shared<Joint>(Vec2(x,y), is_ground, is_input));
+            } else if(data[0] == "d") {
+                std::cout << "dynamic" << std::endl;
+                joints->push_back(std::make_shared<DynamicJoint>((*joints)[std::stoi(data[1])], (*joints)[std::stoi(data[3])], getOperator(data[2][0])));
+            }
         }
 
         std::cout << "loaded joints" << std::endl;
 
         while (std::getline(constraintsFile, line)) {
+            std::cout << line << std::endl;
             std::string command = line.substr(0,3);
             std::string attrs = line.substr(4, line.length()-1);
             std::vector<std::string> data = splitString(attrs, ' ');
@@ -80,9 +108,15 @@ struct SimulationData {
         std::ofstream linkagesFile("save/linkages.txt", std::ios_base::out);
 
 
-        for (size_t i = 1; i < joints->size(); ++i) {
-            std::shared_ptr<Joint> joint = (*joints)[i];
-            jointsFile << joint->x << " " << joint->y << " " << joint->is_ground << " " << joint->is_input << std::endl;
+        for (size_t i = 0; i < joints->size(); ++i) {
+            if(auto d = std::dynamic_pointer_cast<DynamicJoint>((*joints)[i]); d) {
+                int j1 = find(joints->begin(), joints->end(), d->joint1) - joints->begin();
+                int j2 = find(joints->begin(), joints->end(), d->joint2) - joints->begin();
+                jointsFile << "d " << j1 << " " << FromOperator(d->oper) << " " << j2 << std::endl;
+            }else {
+                std::shared_ptr<Joint> joint = (*joints)[i];
+                jointsFile << "s " << (int)joint->x << " " << (int)joint->y << " " << joint->is_ground << " " << joint->is_input << std::endl;
+            }
         }
         
         std::cout << "saved joints" << std::endl;
@@ -96,24 +130,26 @@ struct SimulationData {
         std::cout << "saved linkages" << std::endl;
 
         for(std::shared_ptr<Constraint> constraint : (*constraints)) {
-            if(typeid(constraint) == typeid(DistanceConstraint)) {
-                std::shared_ptr<DistanceConstraint> d = std::dynamic_pointer_cast<DistanceConstraint>(constraint);
+            if(auto d = std::dynamic_pointer_cast<DistanceConstraint>(constraint); d) {
+                int j1 = find(joints->begin(), joints->end(), d->j1) - (joints)->begin();
+                int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
+                int td = find(joints->begin(), joints->end(), d->target_distance) - joints->begin();
+                constraintsFile << "dis " << j1 << " " << j2 << " " << td << std::endl;
+            } else if(auto d = std::dynamic_pointer_cast<LinearConstraint>(constraint); d) {
+                int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
+                int pos = find(joints->begin(), joints->end(), d->position) - joints->begin();
+                int dir = find(joints->begin(), joints->end(), d->direction) - joints->begin();
+                constraintsFile << "lin " << j1 << " " << pos << " " << dir << std::endl;
+            } else if(auto d = std::dynamic_pointer_cast<DirectionConstraint>(constraint); d) {
                 int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
                 int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-                constraintsFile << "dis " << j1 << " " << j2 << " " << d->target_distance << std::endl;
-            } else if(typeid(constraint) == typeid(LinearConstraint)) {
-                std::shared_ptr<LinearConstraint> d = std::dynamic_pointer_cast<LinearConstraint>(constraint);
+                int dir = find(joints->begin(), joints->end(), d->direction) - joints->begin();
+                constraintsFile << "dir " << j1 << " " << j2 << " " << dir << std::endl;
+            } else if(auto d = std::dynamic_pointer_cast<LimitConstraint>(constraint); d) {
                 int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
-                constraintsFile << "lin " << j1 << " " << d->position->x << " " << d->position->y << " " << d->direction->x << " " << d->direction->y << std::endl;
-            } else if(typeid(constraint) == typeid(DirectionConstraint)) {
-                std::shared_ptr<DirectionConstraint> d = std::dynamic_pointer_cast<DirectionConstraint>(constraint);
-                int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
-                int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-                constraintsFile << "dir " << j1 << " " << j2 << " " << d->direction_point->x << " " << d->direction_point->x << std::endl;
-            } else if(typeid(constraint) == typeid(LimitConstraint)) {
-                std::shared_ptr<LimitConstraint> d = std::dynamic_pointer_cast<LimitConstraint>(constraint);
-                int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
-                constraintsFile << "lim " << j1 << " " << d->lim1->x << " " << d->lim1->y << " " << d->lim2->x << " " << d->lim2->y << std::endl;
+                int lim1 = find(joints->begin(), joints->end(), d->lim1) - joints->begin();
+                int lim2 = find(joints->begin(), joints->end(), d->lim2) - joints->begin();
+                constraintsFile << "lim " << j1 << " " << lim1 << " " << lim2 << std::endl;
             }
         }
 

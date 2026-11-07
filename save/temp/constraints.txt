@@ -1,0 +1,5 @@
+dis 1 2 4
+dis 2 3 5
+lin 3 6 7
+dir 1 2 11
+lim 3 8 9

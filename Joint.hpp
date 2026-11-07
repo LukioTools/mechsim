@@ -30,4 +30,6 @@ struct Joint : Vec2 {
             x = p.x;
             y = p.y;
         }
+
+        virtual ~Joint() = default;
 };

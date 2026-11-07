@@ -13,6 +13,7 @@
 #include <vector>
 #include <eigen3/Eigen/Dense>
 
+#include "DynamicJoint.hpp"
 #include "SimulationData.hpp"
 #include "Vec2.hpp"
 #include "constraints/LimitConstraint.hpp"
@@ -190,6 +191,16 @@ int main() {
         if(!userInputs.empty()) {
             windowManager.keyboardUpdate(userInputs);
             userInputs.clear();
+        }
+
+        if(status.save) {
+            simulationData.saveToFile();
+        }
+
+        for (auto joint : (*simulationData.joints)) {
+            if(auto d = std::dynamic_pointer_cast<DynamicJoint>(joint); d) {
+                d->update();
+            }
         }
 
         // Solver:

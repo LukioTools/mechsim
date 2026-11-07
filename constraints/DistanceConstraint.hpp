@@ -52,7 +52,4 @@ class DistanceConstraint : public Constraint {
         }
 
     private:
-        Vec2 distance() {
-            return Vec2(j2->x - j1->x, j2->y - j1->y);
-        }
 };

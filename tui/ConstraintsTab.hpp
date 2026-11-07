@@ -13,18 +13,19 @@
 #include "../constraints/DirectionConstraint.hpp"
 #include "../constraints/LimitConstraint.hpp"
 #include "../constraints/LinearConstraint.hpp"
-#include "../SimulationData.hpp"
 #include "../solver.hpp"
+#include "../SimulationData.hpp"
+#include "../DynamicJoint.hpp"
 
 
 struct ConstraintsTab : Element {
 
     enum STAGES {
         CONSTRAINTS,
-        NEW_Constraint,
+        NEW_CONSTRAINT,
         SELECT_CONSTRAINT,
         CONSTRAINT_SELECTED,
-        VECTOR_INPUT,
+        EDITING_JOINT,
         EXIT
     };
     
@@ -33,7 +34,9 @@ struct ConstraintsTab : Element {
     std::shared_ptr<std::vector<std::shared_ptr<Joint>>> joints;
     std::shared_ptr<Solver> solver;
 
-    std::shared_ptr<Constraint> selectedConstraint;
+    std::function<void(std::shared_ptr<Joint>)> setSelectedVec2;
+
+    int selectedConstraint;
 
     std::string inputData;
     STAGES stage = CONSTRAINTS;
@@ -46,7 +49,7 @@ struct ConstraintsTab : Element {
     void selectConstraint(int j) {
         inputData.clear();
         inputInterfaceOpen = false;
-        selectedConstraint = (*constraints)[j];
+        selectedConstraint = j;
         stage = CONSTRAINT_SELECTED;
     }
 
@@ -59,14 +62,14 @@ struct ConstraintsTab : Element {
         if(auto d = std::dynamic_pointer_cast<DistanceConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
             int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-            std::cout << i << "distance  | first joint: " << j1 << " second joint: " << j2 << " distance: " << d->target_distance->length() << std::endl;
+            std::cout << i << "distance  | first joint: " << j1 << " second joint: " << j2 << " distance: " << (*d->target_distance) << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<LinearConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
             std::cout << i << "linear    | joint: " << j1 << " position: " << (*d->position) << " direction: " << (*d->direction) << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<DirectionConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
             int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
-            std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << (*d->direction_point) << std::endl;
+            std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << (*d->direction) << std::endl;
         } else if(auto d = std::dynamic_pointer_cast<LimitConstraint>(constraint); d) {
             int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
             std::cout << i << "limit     | joint " << j1 << " min: " << (*d->lim1) << "max: " << (*d->lim2) << std::endl;
@@ -77,9 +80,27 @@ struct ConstraintsTab : Element {
             std::cout << "j" << startIndex - 1 << ", position: " << joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << std::flush;
     }
 
+    void printJoints() {
+        int startIndex = 2;
+        for (auto& joint : *joints) {
+            TUI::setCursor(Vec2(0,startIndex));
+            std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << ", used :" << !joint.unique() << std::flush;
+            startIndex++;
+        }
+    }
+
+    void deleteConstraint() {
+        constraints->erase(constraints->begin()+selectedConstraint);
+        goBack();
+    }
+
+    void createConstraint() {
+
+    }
+
     void goBack() {
         switch (stage) { 
-            case NEW_Constraint: 
+            case NEW_CONSTRAINT: 
                 stage = CONSTRAINTS; 
                 break;
             case SELECT_CONSTRAINT: 
@@ -88,10 +109,14 @@ struct ConstraintsTab : Element {
                 break;
             case CONSTRAINT_SELECTED:
                 stage = CONSTRAINTS;
-                selectedConstraint = nullptr;
+                selectedConstraint = -1;
                 break;
             case CONSTRAINTS:
                 stage = EXIT;
+                break;
+            case EDITING_JOINT:
+                stage = CONSTRAINT_SELECTED;
+                break;
             default:
                 break;
         }
@@ -107,6 +132,14 @@ struct ConstraintsTab : Element {
         return startIndex;
     }
 
+    void setVec2ToJoint() {
+        TUI::setCursor(Vec2(0, 100));
+        int idx = std::stoi(inputData);
+        inputData.clear();
+        setSelectedVec2((*joints)[idx-1]);
+        goBack();
+    }
+
     WindowStatus update() override {
 
         switch (stage) {
@@ -116,24 +149,36 @@ struct ConstraintsTab : Element {
                 int i = printConstraints();
                 break;
             }
-            case NEW_Constraint:
+            case NEW_CONSTRAINT:
+                TUI::setCursor(Vec2(0,1));
+                TUI::setFGColor(255, 0, 0);
+                std::cout << "new constraint: " << inputData << std::flush;
+                TUI::resetColor();
+                printJoints();
                 break;
             case SELECT_CONSTRAINT:
                 TUI::setCursor(Vec2(0,1));
                 TUI::setFGColor(255, 0, 0);
-                std::cout << "select joint index: " << inputData << std::flush;
+                std::cout << "select constraint index: " << inputData << std::flush;
                 TUI::resetColor();
                 printConstraints();
                 break;
             case CONSTRAINT_SELECTED:
                 TUI::setCursor(Vec2(0,1));
-                std::cout << selectedConstraint->editor() << std::flush;
+                std::cout << (*constraints)[selectedConstraint]->editor() << std::flush;
                 TUI::setCursor(Vec2(0,2));
-                printConstraint(selectedConstraint);
+                printConstraint((*constraints)[selectedConstraint]);
                 break;
             case EXIT:
                 stage = CONSTRAINTS;
                 return WindowStatus(false, nullptr, false);
+            case EDITING_JOINT:
+                TUI::setCursor(Vec2(0,1));
+                TUI::setFGColor(255, 0, 0);
+                std::cout << "select joint index: " << inputData << std::flush;
+                TUI::resetColor();
+                printJoints();
+                break;
             default:
                 break;
         }
@@ -154,17 +199,132 @@ struct ConstraintsTab : Element {
             case CONSTRAINTS: {
                 switch (key) {
                     case 'n':
-                        return false;
+                        stage = NEW_CONSTRAINT;
+                        return true;
                     case 's':
-                        stage = STAGES::SELECT_CONSTRAINT; 
+                        stage = SELECT_CONSTRAINT; 
                         return true;
                     default: 
                         return false;
                 }
-                break;
             }
             case CONSTRAINT_SELECTED: {
+            if(auto d = std::dynamic_pointer_cast<DistanceConstraint>((*constraints)[selectedConstraint]); d) {
+                switch (key) {
+                    case '1': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->j1 = v;
+                        };
+                        return true;
+                    }
+                    case '2': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->j2 = v;
+                        };
+                        return true;
+                    }
+                    case 'd': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->target_distance = v;
 
+                        };
+                        return true;
+                    }
+                    case 'r': {
+                        deleteConstraint();
+                        return false;
+                    }
+                }
+            } else if(auto d = std::dynamic_pointer_cast<LinearConstraint>((*constraints)[selectedConstraint]); d) {
+                switch (key) {
+                    case '1': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->joint = v;
+                        };
+                        return true;
+                    }
+                    case 'p': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->position = v;
+                        };
+                        return true;
+                    }
+                    case 'd': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->direction = v;
+                        };
+                        return true;
+                    }
+                    case 'r': {
+                        deleteConstraint();
+                        return false;
+                    }
+                }
+            } else if(auto d = std::dynamic_pointer_cast<DirectionConstraint>((*constraints)[selectedConstraint]); d) {
+                switch (key) {
+                    case '1': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->j1 = v;
+                        };
+                        return true;
+                    }
+                    case 'p': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->j2 = v;
+                        };
+                        return true;
+                    }
+                    case 'd': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->direction = v;
+                        };
+                        return true;
+                    }
+                    case 'r': {
+                        deleteConstraint();
+                        return false;
+                    }
+                }
+            } else if(auto d = std::dynamic_pointer_cast<LimitConstraint>((*constraints)[selectedConstraint]); d) {
+                switch (key) {
+                    case 'j': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->joint = v;
+                        };
+                        return true;
+                    }
+                    case '1': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->lim1 = v;
+                        };
+                        return true;
+                    }
+                    case '2': {
+                        stage = EDITING_JOINT;
+                        setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
+                            d->lim2 = v;
+                        };
+                        return true;
+                    }
+                    case 'r': {
+                        deleteConstraint();
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
             }
             default:
                 break;
@@ -175,6 +335,11 @@ struct ConstraintsTab : Element {
 
     //return true if more
     bool keyboardUpdate(char key) override {
+
+        if(key == '\e') {
+            goBack();
+            return false;
+        }
 
         switch (stage) {
             case SELECT_CONSTRAINT:
@@ -190,13 +355,20 @@ struct ConstraintsTab : Element {
                 
                 inputData += key;
                 break;
+            case EDITING_JOINT:
+                if(key == '\r') {
+                    setVec2ToJoint();
+                    return false;
+                }
+
+                if(key == '\b') {
+                    inputData.pop_back();
+                    return true;
+                }
+                
+                inputData += key;
             default:
                 break;
-        }
-
-        if(key == '\e') {
-            goBack();
-            return false;
         }
 
         return true;

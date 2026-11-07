@@ -11,7 +11,8 @@ struct TopBar : Element {
         NONE,
         JOINTS,
         LINKAGES,
-        CONSTRAINTS
+        CONSTRAINTS,
+        SAVE
     };
 
     WINDOWS windowToOpen = NONE;
@@ -28,9 +29,9 @@ struct TopBar : Element {
     WindowStatus update() override {
         TUI::setCursor(Vec2(0, 0));
         if(!isPaused)
-            std::cout << "1: joints     2: linkages     3: constraints     p: pause simulation" << std::endl;
+            std::cout << "1: joints     2: linkages     3: constraints     s: save     p: pause simulation" << std::endl;
         else
-            std::cout << "1: joints     2: linkages     3: constraints     p: continue simulation" << std::endl;
+            std::cout << "1: joints     2: linkages     3: constraints     s: save     p: continue simulation" << std::endl;
 
         switch (windowToOpen) {
             case JOINTS:
@@ -39,6 +40,9 @@ struct TopBar : Element {
             case LINKAGES:
                 windowToOpen = NONE;
                 return WindowStatus(true, linkagesWindow, isPaused);
+            case SAVE:
+                windowToOpen = NONE;
+                return WindowStatus(true, nullptr, isPaused, true);
             case CONSTRAINTS:
                 windowToOpen = NONE;
                 return WindowStatus(true, constraintsWindow, isPaused);
@@ -54,6 +58,8 @@ struct TopBar : Element {
         if(key == '1') windowToOpen = JOINTS; 
         if(key == '2') windowToOpen = LINKAGES; 
         if(key == '3') windowToOpen = CONSTRAINTS; 
+        if(key == '3') windowToOpen = CONSTRAINTS; 
+        if(key == 's') windowToOpen = SAVE; 
         if(key == 'p') isPaused = !isPaused;
         return false;
     }

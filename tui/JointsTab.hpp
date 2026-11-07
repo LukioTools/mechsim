@@ -33,12 +33,16 @@ struct JointsTab : Element {
     JointsTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js) : screenSize(size), joints(js) {
             
         keyboard['s'] = [this]() {
-            if(stage == JOINTS)
+            if(stage == JOINTS){
                 stage = STAGES::SELECT_JOINT; return true;
+            }
+            return false;
         };
         keyboard['p'] = [this]() {
-            if(stage == JOINT_SELECTED)
+            if(stage == JOINT_SELECTED) {
                 stage = STAGES::EDIT_POSITION; return true;
+            }
+            return false;
         };
         keyboard['g'] = [this]() {
             if(stage == JOINT_SELECTED)
@@ -53,6 +57,13 @@ struct JointsTab : Element {
             if (stage == JOINT_SELECTED) {
                 joints->erase(joints->begin()+selectedJoint);
                 goBack();
+            }
+            return false;
+        };
+        keyboard['n'] = [this]() {
+            if(stage == JOINTS) {
+                stage = NEW_JOINT;
+                return true;
             }
             return false;
         };
@@ -71,6 +82,23 @@ struct JointsTab : Element {
         int y = std::stoi(input.substr(input.find(',')+1, input.length()-1));
         (*joints)[selectedJoint]->x = x;
         (*joints)[selectedJoint]->y = y;
+        goBack();
+    }
+
+    void createJoint() {
+        std::vector<std::string> data = SimulationData::splitString(inputData, ' ');
+        if(data[0] == "s") {
+            std::cout << "static" << std::endl;
+            int x = std::stoi(data[1]);
+            int y = std::stoi(data[2]);
+            bool is_ground = (bool)std::stoi(data[3]);
+            bool is_input = (bool)std::stoi(data[4]);
+            joints->push_back(std::make_shared<Joint>(Vec2(x,y), is_ground, is_input));
+        } else if(data[0] == "d") {
+            std::cout << "dynamic" << std::endl;
+            joints->push_back(std::make_shared<DynamicJoint>((*joints)[std::stoi(data[1])], (*joints)[std::stoi(data[3])], SimulationData::getOperator(data[2][0])));
+        }
+        inputData.clear();
         goBack();
     }
 
