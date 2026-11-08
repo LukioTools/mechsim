@@ -1,10 +1,4 @@
 s 294 485 1 0 mouse_position
-s 200 200 1 1 ground
-s 300 300 0 1 up
-s 200 400 0 1 end
-s 200 0 0 0 ground_up_distance
-s 200 0 0 0 up_end_distance
-s 1 0 0 0 linear_constraint_direction
-d mouse_position - ground 0 mouse_dir
-s 220 190 0 0 lim1
-s 600 210 0 0 lim2
+s 200 200 1 1 2g
+s 200 400 1 1 1g
+s 250 150 0 1 down

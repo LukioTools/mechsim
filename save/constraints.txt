@@ -1,5 +1,0 @@
-dis ground up ground_up_distance a
-dis up end up_end_distance b
-dir ground up mouse_dir c
-lin end ground linear_constraint_direction d
-lim end lim1 lim2 e
