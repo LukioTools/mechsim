@@ -6,6 +6,8 @@
 
 class Constraint {
     public:
+        std::string comment;
+        Constraint(std::string c) : comment(c) { };
         virtual float error() = 0;
         virtual void fill_jacobian_row(
             Eigen::Ref<Eigen::RowVectorXd> row

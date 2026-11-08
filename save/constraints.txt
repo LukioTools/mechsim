@@ -1,5 +1,5 @@
-dis 1 2 4
-dis 2 3 5
-lin 3 6 7
-dir 1 2 11
-lim 3 8 9
+dis ground up ground_up_distance a
+dis up end up_end_distance b
+dir ground up mouse_dir c
+lin end ground linear_constraint_direction d
+lim end lim1 lim2 e

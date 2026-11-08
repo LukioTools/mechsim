@@ -21,7 +21,7 @@ struct TopBar : Element {
     std::shared_ptr<Window> linkagesWindow;
     std::shared_ptr<Window> constraintsWindow;
 
-    bool isPaused = false;
+    bool isPaused = true;
     
     TopBar(std::shared_ptr<Window> jsWindow, std::shared_ptr<Window> lsWindow, std::shared_ptr<Window> cstrWindow) : jointsWindow(jsWindow), linkagesWindow(lsWindow), constraintsWindow(cstrWindow) { }
 

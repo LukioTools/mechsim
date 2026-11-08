@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <ostream>
+#include <string>
 
 #define grounded -1
 
@@ -23,7 +24,7 @@ struct DynamicJoint : Joint {
     std::shared_ptr<Vec2> joint2;
     Operator oper;
 
-    DynamicJoint(std::shared_ptr<Vec2> j1, std::shared_ptr<Vec2> j2, Operator op) : Joint(Vec2(0,0), 1, 1), joint1(j1), joint2(j2), oper(op) { }
+    DynamicJoint(std::shared_ptr<Vec2> j1, std::shared_ptr<Vec2> j2, Operator op, bool iv, std::string c) : Joint(Vec2(0,0), 1, iv, c), joint1(j1), joint2(j2), oper(op) { }
 
     void update() {
         switch (oper) {

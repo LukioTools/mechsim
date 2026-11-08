@@ -5,7 +5,8 @@
 #include <ostream>
 
 struct Vec2 {
-    float x,y = 0;
+    float x = 0;
+    float y = 0;
     float operator[] (size_t idx) {
         if(idx == 0) return x;
         else if (idx == 1) return y;
@@ -35,6 +36,13 @@ struct Vec2 {
         return Vec2(x/dist, y/dist);
     }
 
+    Vec2 toUnit() {
+        float dist = std::sqrt(x*x+y*y);
+        if(dist == 0) return Vec2(0,0);
+        x = x/dist; 
+        y = y/dist;
+    }
+
     Vec2 normal() {
         return Vec2(x,-y);
     }
@@ -49,6 +57,7 @@ struct Vec2 {
 
     Vec2() {}
     Vec2(float _x, float _y) : x(_x), y(_y) {}
+    virtual ~Vec2() = default;
 
     static float distance(Vec2 v1, Vec2 v2) {
         return std::sqrt((v2.x-v1.x)*(v2.x-v1.x)+(v2.y-v1.y)*(v2.y-v1.y));

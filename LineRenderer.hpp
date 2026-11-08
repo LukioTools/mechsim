@@ -4,6 +4,7 @@
 #include "Shader/Shader.hpp"
 #include "Vec2.hpp"
 #include <memory>
+#include <string>
 #include <vector>
 
 #include <glad/glad.h>
@@ -29,8 +30,10 @@ struct LineRenderer {
     std::shared_ptr<Joint> j1;
     std::shared_ptr<Joint> j2;
 
+    std::string comment;
+
     float thickness;
-    LineRenderer(std::shared_ptr<Joint> j_1, std::shared_ptr<Joint>  j_2 , float thick) : j1(j_1), j2(j_2), thickness(thick) {}
+    LineRenderer(std::shared_ptr<Joint> j_1, std::shared_ptr<Joint>  j_2 , float thick, std::string c = "") : j1(j_1), j2(j_2), thickness(thick), comment(c) {}
     
     void draw(glm::mat4 projection) {
         glActiveTexture(GL_TEXTURE0);

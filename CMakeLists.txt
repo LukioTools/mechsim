@@ -5,6 +5,8 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
 add_library(glad glad/src/glad.c)
 

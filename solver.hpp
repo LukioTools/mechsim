@@ -7,10 +7,12 @@
 #include <eigen3/Eigen/LU>
 #include <iomanip>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include <eigen3/Eigen/Dense>
 
@@ -39,13 +41,13 @@ void printMatrix(const Eigen::MatrixXd& M)
 }
 
 struct Solver {
-    std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> constraints;
+    std::shared_ptr<std::map<std::string,std::shared_ptr<Constraint>>> constraints;
     std::vector<std::shared_ptr<Joint>> joints;
     int max_variable_index;
 
     void get_joints() {
         joints.clear();
-        for (std::shared_ptr<Constraint> constraint : (*constraints)) {
+        for (auto& [key, constraint] : (*constraints)) {
             for (std::shared_ptr<Joint> joint : constraint->get_joints()) {
                 if(std::find(joints.begin(), joints.end(), joint) != joints.end()) continue;
                 joints.push_back(joint);
@@ -57,25 +59,28 @@ struct Solver {
         Eigen::MatrixXd Jacobian(constraints->size(), max_variable_index*2);
         Jacobian.setZero();
         
-        for (int i = 0; i < constraints->size(); i++) {
-            std::shared_ptr<Constraint> constr = constraints->at(i);
+        int i = 0;
+        for (auto& [key, constr] : *constraints) {
             Eigen::RowVectorXd row(2*max_variable_index);
             constr->fill_jacobian_row(row);
             Jacobian.row(i) = row;
+            i++;
         }
         return Jacobian;
     }
 
     Eigen::VectorXd get_errors() {
         Eigen::VectorXd errors(constraints->size());
-        for (int i = 0; i < constraints->size(); i++) {
-            errors[i] = (*constraints)[i]->error();
+        int i = 0;
+        for (auto& constraint : *constraints) {
+            errors[i] = constraint.second->error();
+            i++;
         }
         return  errors;
     }
 
     void fix_variable_indices() {
-        for (const std::shared_ptr<Constraint> constraint : (*constraints)) {
+        for (const auto& [key, constraint] : (*constraints)) {
             for (std::shared_ptr<Joint> joint : constraint->get_joints()) {
                 joint->variable_index = grounded;
             }
@@ -89,7 +94,7 @@ struct Solver {
         fix_variable_indices();
 
         int idx = 0;
-        for (const std::shared_ptr<Constraint> constraint : (*constraints)) {
+        for (auto& [key, constraint] : (*constraints)) {
             for (std::shared_ptr<Joint> joint : constraint->get_joints()) {
                 if(joint->is_ground) {joint->variable_index = grounded; continue;}
                 if(joint->variable_index != grounded ) {continue;} 
@@ -121,7 +126,7 @@ struct Solver {
         }
     }
 
-    void updateConstraints(std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> ctrs) {
+    void updateConstraints(std::shared_ptr<std::map<std::string,std::shared_ptr<Constraint>>> ctrs) {
         constraints = ctrs;
         max_variable_index = assign_variable_indexes();
         get_joints();

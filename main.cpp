@@ -10,10 +10,13 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <unistd.h>
 #include <vector>
 #include <eigen3/Eigen/Dense>
 
+#include "BallRenderer.hpp"
 #include "DynamicJoint.hpp"
+#include "Joint.hpp"
 #include "SimulationData.hpp"
 #include "Vec2.hpp"
 #include "constraints/LimitConstraint.hpp"
@@ -149,6 +152,7 @@ int main() {
     Vec2 offset;
 
     LineRenderer::init();
+    BallRenderer::init();
 
     while(!glfwWindowShouldClose(window))
     {
@@ -180,10 +184,15 @@ int main() {
 
         glm::mat4 projection = glm::ortho(0.0f - realOffset.x, (float)(width*cursorScaling) - realOffset.x, 0.0f - realOffset.y, (float)(windowHeight*cursorScaling) - realOffset.y, -1.0f, 1.0f);
 
-        (*simulationData.joints)[0]->setPosition(cursorPos*cursorScaling-realOffset);
+        (*simulationData.joints)["mouse_position"]->setPosition(cursorPos*cursorScaling-realOffset);
 
-        for (std::shared_ptr<LineRenderer> line : (*simulationData.linkages)) {
-            line->draw(projection);
+        for (auto& line : (*simulationData.linkages)) {
+            line.second->draw(projection);
+        }
+
+        for (auto& joint : (*simulationData.joints)) {
+            if(joint.second->is_visible)
+                joint.second->ballRenderer.draw(projection);
         }
 
         TUI::clear();
@@ -198,7 +207,7 @@ int main() {
         }
 
         for (auto joint : (*simulationData.joints)) {
-            if(auto d = std::dynamic_pointer_cast<DynamicJoint>(joint); d) {
+            if(auto d = std::dynamic_pointer_cast<DynamicJoint>(joint.second); d) {
                 d->update();
             }
         }
@@ -208,7 +217,7 @@ int main() {
             solver->updateConstraints(simulationData.constraints);
             bool fixed_result = solver->solve(100);
             if(fixed_result) {
-                TUI::setCursor(Vec2(70, 0));
+                TUI::setCursor(Vec2(100, 0));
                 std::cout << "solved" << std::flush;
             }
         }

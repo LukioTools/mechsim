@@ -1,26 +1,30 @@
 #pragma once
 
 #include "Constraint.hpp"
+#include <string>
 
 class LinearConstraint : public Constraint {
     public:
         std::shared_ptr<Joint> joint;
         std::shared_ptr<Vec2> position;
-        std::shared_ptr<Vec2> direction; // unit vector
+        std::shared_ptr<Vec2> sharedDirection; // unit vector
 
-        LinearConstraint(std::shared_ptr<Joint> j, std::shared_ptr<Vec2> p, std::shared_ptr<Vec2> dir) : joint(j), position(p), direction(dir) { }
+        LinearConstraint(std::shared_ptr<Joint> j, std::shared_ptr<Vec2> p, std::shared_ptr<Vec2> dir, std::string c) : joint(j), position(p), sharedDirection(dir), Constraint(c) { }
 
         float error() override {
-            return -direction->y*(joint->x - position->x) + direction->x*(joint->y - position->y);
+            Vec2 direction = sharedDirection->unit();
+            return -direction.y*(joint->x - position->x) + direction.x*(joint->y - position->y);
         }
 
         void fill_jacobian_row(Eigen::Ref<Eigen::RowVectorXd> row) const override {
             row.setZero();
+            
 
             if(joint->variable_index >= 0) {
                 int k = 2*joint->variable_index;
-                row[k] = -direction->y;
-                row[k+1] = direction->x;
+                Vec2 direction = sharedDirection->unit();
+                row[k] = -direction.y;
+                row[k+1] = direction.x;
             }
         }   
 

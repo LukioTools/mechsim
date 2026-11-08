@@ -3,6 +3,7 @@
 #include "Constraint.hpp"
 #include <cmath>
 #include <iostream>
+#include <string>
 
 class DirectionConstraint : public Constraint {
     public:
@@ -10,7 +11,7 @@ class DirectionConstraint : public Constraint {
         std::shared_ptr<Joint> j2;
         std::shared_ptr<Vec2> direction;
 
-        DirectionConstraint(std::shared_ptr<Joint> j1, std::shared_ptr<Joint> j2, std::shared_ptr<Joint> dir) : j1(j1), j2(j2), direction(dir) { }
+        DirectionConstraint(std::shared_ptr<Joint> j1, std::shared_ptr<Joint> j2, std::shared_ptr<Joint> dir, std::string c) : j1(j1), j2(j2), direction(dir), Constraint(c) { }
 
         float error() override { 
 

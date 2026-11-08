@@ -22,15 +22,15 @@ struct JointsTab : Element {
     };
     
     bool inputInterfaceOpen = false;
-    std::shared_ptr<std::vector<std::shared_ptr<Joint>>> joints;
+    std::shared_ptr<std::map<std::string, std::shared_ptr<Joint>>> joints;
 
-    int selectedJoint;
+    std::string selectedJoint;
 
     std::string inputData;
     STAGES stage = JOINTS;
 
     Vec2 screenSize;
-    JointsTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js) : screenSize(size), joints(js) {
+    JointsTab(Vec2 size, std::shared_ptr<std::map<std::string, std::shared_ptr<Joint>>> js) : screenSize(size), joints(js) {
             
         keyboard['s'] = [this]() {
             if(stage == JOINTS){
@@ -50,12 +50,12 @@ struct JointsTab : Element {
             return false;
         };
         keyboard['i'] = [this]() {
-            (*joints)[selectedJoint]->is_input = !(*joints)[selectedJoint]->is_input;
+            (*joints)[selectedJoint]->is_visible = !(*joints)[selectedJoint]->is_visible;
             return false;
         };
         keyboard['d'] = [this]() {
             if (stage == JOINT_SELECTED) {
-                joints->erase(joints->begin()+selectedJoint);
+                joints->erase(selectedJoint);
                 goBack();
             }
             return false;
@@ -93,10 +93,10 @@ struct JointsTab : Element {
             int y = std::stoi(data[2]);
             bool is_ground = (bool)std::stoi(data[3]);
             bool is_input = (bool)std::stoi(data[4]);
-            joints->push_back(std::make_shared<Joint>(Vec2(x,y), is_ground, is_input));
+            joints->insert({data[5], std::make_shared<Joint>(Vec2(x,y), is_ground, is_input, data[5])});
         } else if(data[0] == "d") {
             std::cout << "dynamic" << std::endl;
-            joints->push_back(std::make_shared<DynamicJoint>((*joints)[std::stoi(data[1])], (*joints)[std::stoi(data[3])], SimulationData::getOperator(data[2][0])));
+            joints->insert({data[5], std::make_shared<DynamicJoint>((*joints)[data[1]], (*joints)[data[3]], SimulationData::getOperator(data[2][0]), std::stoi(data[4]), data[5])});
         }
         inputData.clear();
         goBack();
@@ -128,9 +128,9 @@ struct JointsTab : Element {
     
     void printJoints() {
         int startIndex = 2;
-        for (auto& joint : *joints) {
+        for (auto& [key, joint] : *joints) {
             TUI::setCursor(Vec2(0,startIndex));
-            std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << ", used :" << !joint.unique() << std::flush;
+            std::cout << key << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_visible << " " << key << ", used :" << !joint.unique() << std::flush;
             startIndex++;
         }
     }
@@ -155,7 +155,7 @@ struct JointsTab : Element {
                 TUI::setCursor(Vec2(0,1));
                 std::cout << "p: edit position     g: toggle ground     i: toggle input     d: delete" << std::flush;
                 TUI::setCursor(Vec2(0,2));
-                std::cout << "joint: " << "position: " << *(*joints)[selectedJoint] << ", is ground: " << (*joints)[selectedJoint]->is_ground << ", is input: " << (*joints)[selectedJoint]->is_input << " used: " << !(*joints)[selectedJoint].unique() << std::flush;
+                std::cout << "joint: " << "position: " << *(*joints)[selectedJoint] << ", is ground: " << (*joints)[selectedJoint]->is_ground << ", is input: " << (*joints)[selectedJoint]->is_visible << " used: " << !(*joints)[selectedJoint].unique() << std::flush;
                 break;
             case EDIT_POSITION:
                 TUI::setCursor(Vec2(0,1));
@@ -164,7 +164,7 @@ struct JointsTab : Element {
                 TUI::resetColor();
                 
                 TUI::setCursor(Vec2(0,2));
-                std::cout << "joint: " << "position: " << (*joints)[selectedJoint] << ", is ground: " << (*joints)[selectedJoint]->is_ground << ", is input: " << (*joints)[selectedJoint]->is_input << std::flush;
+                std::cout << "joint: " << "position: " << (*joints)[selectedJoint] << ", is ground: " << (*joints)[selectedJoint]->is_ground << ", is input: " << (*joints)[selectedJoint]->is_visible << std::flush;
                 return WindowStatus(true, nullptr, true);
                 
                 break;

@@ -23,16 +23,16 @@ struct linkagesTab : Element {
     };
     
     bool inputInterfaceOpen = false;
-    std::shared_ptr<std::vector<std::shared_ptr<LineRenderer>>> linkages;
-    std::shared_ptr<std::vector<std::shared_ptr<Joint>>> joints;
+    std::shared_ptr<std::map<std::string, std::shared_ptr<LineRenderer>>> linkages;
+    std::shared_ptr<std::map<std::string, std::shared_ptr<Joint>>> joints;
 
-    int selectedLinkage;
+    std::string selectedLinkage;
 
     std::string inputData;
     STAGES stage = LINKAGES;
 
     Vec2 screenSize;
-    linkagesTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<LineRenderer>>> lr, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js) : screenSize(size), linkages(lr), joints(js) {
+    linkagesTab(Vec2 size, std::shared_ptr<std::map<std::string, std::shared_ptr<LineRenderer>>> lr, std::shared_ptr<std::map<std::string, std::shared_ptr<Joint>>> js) : screenSize(size), linkages(lr), joints(js) {
             
         keyboard['s'] = [this]() {
             if(stage == LINKAGES)
@@ -41,7 +41,7 @@ struct linkagesTab : Element {
         };
         keyboard['d'] = [this]() {
             if(stage == LINK_SELECTED) {
-                linkages->erase(linkages->begin()+selectedLinkage);
+                linkages->erase(selectedLinkage);
                 goBack();
             }
             return false;
@@ -69,10 +69,10 @@ struct linkagesTab : Element {
             goBack();
         }
 
-        int j1 = std::stoi(attrs[0]);
-        int j2 = std::stoi(attrs[1]);
+        std::string j1 = attrs[0];
+        std::string j2 = attrs[1];
 
-        linkages->push_back(std::make_shared<LineRenderer>((*joints)[j1-1],(*joints)[j2-1], 10));
+        linkages->insert({attrs[2],std::make_shared<LineRenderer>((*joints)[j1],(*joints)[j2], 10)});
         selectLinkage(linkages->size()-1);
     }
 
@@ -101,8 +101,8 @@ struct linkagesTab : Element {
         int startIndex = 2;
         for (auto& link : *linkages) {
             TUI::setCursor(Vec2(0,startIndex));
-            int j1 = std::find(joints->begin(), joints->end(), link->j1) - joints->begin();
-            int j2 = std::find(joints->begin(), joints->end(), link->j2) - joints->begin();
+            std::string j1 = SimulationData::findJointkey(link.second->j1, joints);
+            std::string j2 = SimulationData::findJointkey(link.second->j2, joints);
             std::cout << startIndex - 1 << " | " << "first joint: " << j1 << " second joint: " << j2 << std::flush;
             startIndex++;
         }
@@ -110,9 +110,9 @@ struct linkagesTab : Element {
 
     void printJoints() {
         int startIndex = 2;
-        for (auto& joint : *joints) {
+        for (auto& [key, joint] : *joints) {
             TUI::setCursor(Vec2(0,startIndex));
-            std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << ", used :" << !joint.unique() << std::flush;
+            std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_visible << ", used :" << !joint.unique() << std::flush;
             startIndex++;
         }
     }

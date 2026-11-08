@@ -6,13 +6,14 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
   tui/Window.hpp \
   tui/WindowStatus.hpp \
   tui/TopBar.hpp \
+  BallRenderer.hpp \
   DynamicJoint.hpp \
   Joint.hpp \
   Line.hpp \
   LineRenderer.hpp \
+  Vec2.hpp \
   Shader/Shader.hpp \
   SimulationData.hpp \
-  Vec2.hpp \
   constraints/Constraint.hpp \
   constraints/DirectionConstraint.hpp \
   constraints/DistanceConstraint.hpp \
@@ -225,9 +226,12 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
   /usr/include/c++/16/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/16/bits/stl_iterator_base_types.h \
   /usr/include/c++/16/bits/stl_list.h \
+  /usr/include/c++/16/bits/stl_map.h \
+  /usr/include/c++/16/bits/stl_multimap.h \
   /usr/include/c++/16/bits/stl_pair.h \
   /usr/include/c++/16/bits/stl_raw_storage_iter.h \
   /usr/include/c++/16/bits/stl_tempbuf.h \
+  /usr/include/c++/16/bits/stl_tree.h \
   /usr/include/c++/16/bits/stl_uninitialized.h \
   /usr/include/c++/16/bits/stl_vector.h \
   /usr/include/c++/16/bits/streambuf.tcc \
@@ -281,6 +285,7 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
   /usr/include/c++/16/limits \
   /usr/include/c++/16/list \
   /usr/include/c++/16/locale \
+  /usr/include/c++/16/map \
   /usr/include/c++/16/memory \
   /usr/include/c++/16/new \
   /usr/include/c++/16/numbers \
@@ -931,8 +936,6 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
 
 /usr/include/glm/ext/matrix_float3x2.hpp:
 
-/usr/include/glm/ext/matrix_float2x4.hpp:
-
 /usr/include/glm/ext/matrix_float2x3_precision.hpp:
 
 /usr/include/glm/ext/matrix_float2x3.hpp:
@@ -1037,6 +1040,12 @@ CMakeFiles/main.dir/main.cpp.o: main.cpp \
 
 /usr/include/glm/detail/compute_vector_decl.hpp:
 
+/usr/include/glm/detail/compute_common.hpp:
+
+/usr/include/glm/detail/_vectorize.hpp:
+
+/usr/include/glm/detail/_fixes.hpp:
+
 /usr/include/c++/16/cstdint:
 
 /usr/include/c++/16/cstddef:
@@ -1097,12 +1106,6 @@ glad/include/KHR/khrplatform.h:
 
 /usr/include/c++/16/bits/sstream.tcc:
 
-/usr/lib/gcc/x86_64-pc-linux-gnu/16/include/stdarg.h:
-
-/usr/include/c++/16/bits/stl_uninitialized.h:
-
-/usr/include/c++/16/cstring:
-
 /usr/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix.h:
 
 /usr/include/c++/16/bits/shared_ptr_base.h:
@@ -1112,6 +1115,12 @@ glad/include/KHR/khrplatform.h:
 /usr/include/c++/16/cmath:
 
 /usr/include/c++/16/bits/align.h:
+
+/usr/include/glm/gtc/type_ptr.inl:
+
+/usr/include/glm/common.hpp:
+
+tui/TopBar.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/GeneralProduct.h:
 
@@ -1194,6 +1203,16 @@ glad/include/KHR/khrplatform.h:
 /usr/include/endian.h:
 
 /usr/include/c++/16/bits/concept_check.h:
+
+/usr/include/glm/ext/matrix_float2x4.hpp:
+
+/usr/include/c++/16/bits/stl_multimap.h:
+
+/usr/include/glm/ext/vector_float1_precision.hpp:
+
+/usr/include/eigen3/Eigen/src/Core/SolverBase.h:
+
+/usr/include/eigen3/Eigen/src/Core/util/SymbolicIndex.h:
 
 /usr/include/c++/16/bits/codecvt.h:
 
@@ -1283,26 +1302,6 @@ glad/include/KHR/khrplatform.h:
 
 /usr/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.inc:
 
-/usr/include/bits/getopt_core.h:
-
-/usr/include/glm/integer.hpp:
-
-/usr/include/glm/ext/matrix_float4x4.hpp:
-
-/usr/include/glm/detail/func_trigonometric.inl:
-
-/usr/include/c++/16/bits/streambuf_iterator.h:
-
-tui/JointsTab.hpp:
-
-/usr/include/asm/posix_types_64.h:
-
-/usr/include/eigen3/Eigen/src/Core/CommaInitializer.h:
-
-/usr/include/bits/types.h:
-
-/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h:
-
 /usr/include/c++/16/bits/enable_special_members.h:
 
 /usr/include/c++/16/tr1/exp_integral.tcc:
@@ -1323,6 +1322,8 @@ tui/JointsTab.hpp:
 
 /usr/include/asm-generic/posix_types.h:
 
+/usr/include/c++/16/bits/stl_map.h:
+
 /usr/include/c++/16/bits/quoted_string.h:
 
 /usr/include/bits/types/__sigset_t.h:
@@ -1333,10 +1334,6 @@ constraints/DistanceConstraint.hpp:
 
 /usr/include/asm-generic/types.h:
 
-/usr/include/eigen3/Eigen/src/Geometry/Homogeneous.h:
-
-/usr/include/asm-generic/bitsperlong.h:
-
 /usr/include/asm-generic/ioctls.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/syslimits.h:
@@ -1346,10 +1343,6 @@ constraints/DistanceConstraint.hpp:
 /usr/include/c++/16/bits/ostream.h:
 
 /usr/include/eigen3/Eigen/src/Core/util/Meta.h:
-
-/usr/include/bits/errno.h:
-
-/usr/include/eigen3/Eigen/src/Core/VectorBlock.h:
 
 /usr/include/glm/ext/vector_relational.inl:
 
@@ -1379,6 +1372,10 @@ tui/ConstraintsTab.hpp:
 
 /usr/include/c++/16/bits/exception_ptr.h:
 
+/usr/include/asm/posix_types_64.h:
+
+/usr/include/eigen3/Eigen/src/Core/CommaInitializer.h:
+
 /usr/include/asm/posix_types.h:
 
 tui/Window.hpp:
@@ -1386,6 +1383,8 @@ tui/Window.hpp:
 /usr/include/bits/time.h:
 
 /usr/include/c++/16/bits/new_allocator.h:
+
+/usr/include/c++/16/map:
 
 tui/WindowStatus.hpp:
 
@@ -1400,6 +1399,12 @@ tui/WindowStatus.hpp:
 /usr/include/asm-generic/errno.h:
 
 /usr/include/c++/16/bits/stl_vector.h:
+
+main.cpp:
+
+/usr/include/c++/16/clocale:
+
+/usr/include/eigen3/Eigen/src/Core/BandMatrix.h:
 
 /usr/include/c++/16/memory:
 
@@ -1447,6 +1452,8 @@ tui/WindowManager.hpp:
 
 /usr/include/c++/16/ext/type_traits.h:
 
+/usr/include/bits/types/__locale_t.h:
+
 /usr/include/bits/posix_opt.h:
 
 /usr/include/c++/16/bits/unordered_map.h:
@@ -1470,6 +1477,12 @@ tui/WindowManager.hpp:
 /usr/include/glm/ext/matrix_double3x3.hpp:
 
 /usr/include/c++/16/bits/ptr_traits.h:
+
+tui/JointsTab.hpp:
+
+BallRenderer.hpp:
+
+/usr/include/eigen3/Eigen/src/Core/util/IndexedViewHelper.h:
 
 /usr/include/c++/16/bits/shared_ptr_atomic.h:
 
@@ -1501,6 +1514,20 @@ Shader/Shader.hpp:
 
 /usr/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h:
 
+/usr/include/glm/integer.hpp:
+
+/usr/include/glm/ext/matrix_float4x4.hpp:
+
+/usr/include/glm/detail/func_trigonometric.inl:
+
+/usr/include/c++/16/bits/streambuf_iterator.h:
+
+/usr/include/bits/getopt_core.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/eigen3/Eigen/src/Core/TriangularMatrix.h:
+
 /usr/include/asm/bitsperlong.h:
 
 /usr/include/eigen3/Eigen/src/Core/Ref.h:
@@ -1525,8 +1552,6 @@ tui/Element.hpp:
 
 Joint.hpp:
 
-/usr/include/glm/detail/compute_common.hpp:
-
 /usr/include/bits/confname.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h:
@@ -1544,10 +1569,6 @@ Joint.hpp:
 /usr/include/c++/16/bits/stl_iterator_base_types.h:
 
 /usr/include/eigen3/Eigen/src/Jacobi/InternalHeaderCheck.h:
-
-/usr/include/c++/16/cstdio:
-
-/usr/include/bits/types/__locale_t.h:
 
 /usr/include/c++/16/bits/stl_raw_storage_iter.h:
 
@@ -1584,12 +1605,6 @@ DynamicJoint.hpp:
 /usr/include/glm/ext/matrix_double4x4.hpp:
 
 /usr/include/alloca.h:
-
-main.cpp:
-
-/usr/include/c++/16/clocale:
-
-/usr/include/eigen3/Eigen/src/Core/BandMatrix.h:
 
 /usr/include/bits/getopt_posix.h:
 
@@ -1713,6 +1728,8 @@ constraints/DirectionConstraint.hpp:
 
 /usr/include/eigen3/Eigen/src/Geometry/Hyperplane.h:
 
+/usr/include/c++/16/bits/stl_tree.h:
+
 /usr/include/c++/16/bits/istream.tcc:
 
 /usr/include/c++/16/bits/allocator.h:
@@ -1720,6 +1737,10 @@ constraints/DirectionConstraint.hpp:
 /usr/include/bits/stdlib-float.h:
 
 /usr/include/bits/time64.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/eigen3/Eigen/src/Core/VectorBlock.h:
 
 /usr/include/eigen3/Eigen/Eigenvalues:
 
@@ -1802,6 +1823,18 @@ constraints/Constraint.hpp:
 /usr/include/bits/posix2_lim.h:
 
 /usr/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h:
+
+/usr/include/c++/16/cstdio:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/16/include/stdarg.h:
+
+/usr/include/c++/16/bits/stl_uninitialized.h:
+
+/usr/include/c++/16/cstring:
+
+/usr/include/asm-generic/bitsperlong.h:
+
+/usr/include/eigen3/Eigen/src/Geometry/Homogeneous.h:
 
 /usr/include/c++/16/cwchar:
 
@@ -2105,12 +2138,6 @@ tui/LinkagesTab.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/SolveTriangular.h:
 
-/usr/include/glm/ext/vector_float1_precision.hpp:
-
-/usr/include/eigen3/Eigen/src/Core/SolverBase.h:
-
-/usr/include/eigen3/Eigen/src/Core/util/SymbolicIndex.h:
-
 /usr/include/eigen3/Eigen/src/Core/StableNorm.h:
 
 /usr/include/glm/ext/vector_int2_sized.hpp:
@@ -2171,8 +2198,6 @@ tui/LinkagesTab.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h:
 
-/usr/include/eigen3/Eigen/src/Core/util/IndexedViewHelper.h:
-
 /usr/include/eigen3/Eigen/src/Core/util/IntegralConstant.h:
 
 /usr/include/eigen3/Eigen/src/Core/util/MKL_support.h:
@@ -2209,9 +2234,9 @@ tui/LinkagesTab.hpp:
 
 /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h:
 
-/usr/include/bits/stdint-intn.h:
-
 /usr/include/bits/wctype-wchar.h:
+
+/usr/include/bits/stdint-intn.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/AlignedBox.h:
 
@@ -2251,12 +2276,6 @@ SimulationData.hpp:
 
 /usr/include/eigen3/Eigen/src/LU/FullPivLU.h:
 
-/usr/include/glm/gtc/type_ptr.inl:
-
-tui/TopBar.hpp:
-
-/usr/include/glm/common.hpp:
-
 /usr/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h:
 
 /usr/include/eigen3/Eigen/src/Core/products/Parallelizer.h:
@@ -2284,7 +2303,3 @@ tui/TopBar.hpp:
 /usr/include/eigen3/Eigen/src/plugins/ArrayCwiseBinaryOps.inc:
 
 /usr/include/eigen3/Eigen/src/plugins/ArrayCwiseUnaryOps.inc:
-
-/usr/include/glm/detail/_fixes.hpp:
-
-/usr/include/glm/detail/_vectorize.hpp:

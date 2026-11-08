@@ -10,8 +10,8 @@ class DistanceConstraint : public Constraint {
         std::shared_ptr<Joint> j2;
         std::shared_ptr<Vec2> target_distance;
 
-        DistanceConstraint(std::shared_ptr<Joint> joint1, std::shared_ptr<Joint> joint2, std::shared_ptr<Joint> distance)
-            : j1(joint1), j2(joint2), target_distance(distance) {}
+        DistanceConstraint(std::shared_ptr<Joint> joint1, std::shared_ptr<Joint> joint2, std::shared_ptr<Joint> distance, std::string c)
+            : j1(joint1), j2(joint2), target_distance(distance), Constraint(c) {}
 
         float error() override {
             float dx = j2->x - j1->x;

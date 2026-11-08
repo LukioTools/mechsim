@@ -30,19 +30,19 @@ struct ConstraintsTab : Element {
     };
     
     bool inputInterfaceOpen = false;
-    std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> constraints;
-    std::shared_ptr<std::vector<std::shared_ptr<Joint>>> joints;
+    std::shared_ptr<std::map<std::string,std::shared_ptr<Constraint>>> constraints;
+    std::shared_ptr<std::map<std::string,std::shared_ptr<Joint>>> joints;
     std::shared_ptr<Solver> solver;
 
     std::function<void(std::shared_ptr<Joint>)> setSelectedVec2;
 
-    int selectedConstraint;
+    std::string selectedConstraint;
 
     std::string inputData;
     STAGES stage = CONSTRAINTS;
 
     Vec2 screenSize;
-    ConstraintsTab(Vec2 size, std::shared_ptr<std::vector<std::shared_ptr<Constraint>>> cst, std::shared_ptr<std::vector<std::shared_ptr<Joint>>> js, std::shared_ptr<Solver> s) : screenSize(size), constraints(cst), joints(js), solver(s) {
+    ConstraintsTab(Vec2 size, std::shared_ptr<std::map<std::string, std::shared_ptr<Constraint>>> cst, std::shared_ptr<std::map<std::string, std::shared_ptr<Joint>>> js, std::shared_ptr<Solver> s) : screenSize(size), constraints(cst), joints(js), solver(s) {
             
     }
 
@@ -60,37 +60,40 @@ struct ConstraintsTab : Element {
         else 
             i = "";
         if(auto d = std::dynamic_pointer_cast<DistanceConstraint>(constraint); d) {
-            int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
-            int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
+            std::string j1 = SimulationData::findJointkey(d->j1, joints);
+            std::string j2 = SimulationData::findJointkey(d->j2, joints);
             std::cout << i << "distance  | first joint: " << j1 << " second joint: " << j2 << " distance: " << (*d->target_distance) << std::endl;
+        
         } else if(auto d = std::dynamic_pointer_cast<LinearConstraint>(constraint); d) {
-            int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
-            std::cout << i << "linear    | joint: " << j1 << " position: " << (*d->position) << " direction: " << (*d->direction) << std::endl;
+            std::string j1 = SimulationData::findJointkey(d->joint, joints);
+            std::cout << i << "linear    | joint: " << j1 << " position: " << (*d->position) << " direction: " << (*d->sharedDirection) << std::endl;
+        
         } else if(auto d = std::dynamic_pointer_cast<DirectionConstraint>(constraint); d) {
-            int j1 = find(joints->begin(), joints->end(), d->j1) - joints->begin();
-            int j2 = find(joints->begin(), joints->end(), d->j2) - joints->begin();
+            std::string j1 = SimulationData::findJointkey(d->j1, joints);
+            std::string j2 = SimulationData::findJointkey(d->j2, joints);
             std::cout << i << "direction | first joint: " << j1 << " second joint: " << j2 << " direction: " << (*d->direction) << std::endl;
+        
         } else if(auto d = std::dynamic_pointer_cast<LimitConstraint>(constraint); d) {
-            int j1 = find(joints->begin(), joints->end(), d->joint) - joints->begin();
+            std::string j1 = SimulationData::findJointkey(d->joint, joints);
             std::cout << i << "limit     | joint " << j1 << " min: " << (*d->lim1) << "max: " << (*d->lim2) << std::endl;
         }
     }
 
     void printJoint(std::shared_ptr<Joint> joint, int startIndex) {
-            std::cout << "j" << startIndex - 1 << ", position: " << joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << std::flush;
+            std::cout << "j" << startIndex - 1 << ", position: " << joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_visible << std::flush;
     }
 
     void printJoints() {
         int startIndex = 2;
-        for (auto& joint : *joints) {
+        for (auto& [key, joint] : *joints) {
             TUI::setCursor(Vec2(0,startIndex));
-            std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_input << ", used :" << !joint.unique() << std::flush;
+            std::cout << startIndex - 1 << " | position: " << *joint << ", is ground: " << joint->is_ground << ", is input: " << joint->is_visible << " " << key << ", used :" << !joint.unique() << std::flush;
             startIndex++;
         }
     }
 
     void deleteConstraint() {
-        constraints->erase(constraints->begin()+selectedConstraint);
+        constraints->erase(selectedConstraint);
         goBack();
     }
 
@@ -124,7 +127,7 @@ struct ConstraintsTab : Element {
     
     int printConstraints() {
         int startIndex = 2;
-        for (auto& constraint : (*constraints)) {
+        for (auto& [key, constraint] : (*constraints)) {
             TUI::setCursor(Vec2(0,startIndex));
             printConstraint(constraint, startIndex-1);
             startIndex++;
@@ -134,9 +137,9 @@ struct ConstraintsTab : Element {
 
     void setVec2ToJoint() {
         TUI::setCursor(Vec2(0, 100));
-        int idx = std::stoi(inputData);
+        std::string idx = inputData;
         inputData.clear();
-        setSelectedVec2((*joints)[idx-1]);
+        setSelectedVec2((*joints)[idx]);
         goBack();
     }
 
@@ -145,7 +148,7 @@ struct ConstraintsTab : Element {
         switch (stage) {
             case CONSTRAINTS: {
                 TUI::setCursor(Vec2(0, 1));
-                std::cout << "n: new constraint    s: select constraint" << std::flush;
+                std::cout << "n: new constraint    s: select constraint " << constraints->size() << std::flush;
                 int i = printConstraints();
                 break;
             }
@@ -257,7 +260,7 @@ struct ConstraintsTab : Element {
                     case 'd': {
                         stage = EDITING_JOINT;
                         setSelectedVec2 = [d](std::shared_ptr<Joint> v) {
-                            d->direction = v;
+                            d->sharedDirection = v;
                         };
                         return true;
                     }
