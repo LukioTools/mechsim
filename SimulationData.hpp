@@ -61,7 +61,7 @@ struct SimulationData {
 
         while (std::getline(jointsFile, line)) {
             std::vector<std::string> data = splitString(line, ' ');
-            if(data.empty()) continue;
+            if(data.size() <= 1) continue;
             if(data[0] == "s") {
                 if(data.size() != 6) throw std::invalid_argument("wrong amount of arguments at: " + line);
 
@@ -75,7 +75,11 @@ struct SimulationData {
                 if(data.size() != 6) throw std::invalid_argument("wrong amount of arguments at: " + line);
                 std::cout << "dynamic" << std::endl;
                 joints->insert({ data[5], std::make_shared<DynamicJoint>((*joints)[data[1]], (*joints)[data[3]], getOperator(data[2][0]), std::stoi(data[4]), data[5] )});
-            } else {
+            } else if(data[0] == "//") {
+                // its a comment
+                continue;
+            } 
+            else {
                 throw std::invalid_argument("invalid joint type at line: " + line);
             }
         }

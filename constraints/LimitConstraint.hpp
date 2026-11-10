@@ -13,7 +13,7 @@ class LimitConstraint : public Constraint {
 
         LimitConstraint(std::shared_ptr<Joint> j, std::shared_ptr<Vec2> l1, std::shared_ptr<Vec2> l2, std::string c) : joint(j), lim1(l1), lim2(l2), Constraint(c) { }
 
-        float error() override {
+        double error() override {
             if(joint->x >= lim1->x && joint->x <= lim2->x && joint->y >= lim1->y && joint->y <= lim2->y) return 0;
             Vec2 posOnLims;
             posOnLims.x = glm::clamp(joint->x, lim1->x, lim2->x);
@@ -35,7 +35,7 @@ class LimitConstraint : public Constraint {
             posOnLims.y = glm::clamp(joint->y, lim1->y, lim2->y);
         
             Vec2 d = posOnLims - *joint;
-            float r = d.length();
+            double r = d.length();
 
             if (joint->variable_index >= 0) {
                 int k = 2 * joint->variable_index;

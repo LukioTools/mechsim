@@ -13,13 +13,13 @@ class DirectionConstraint : public Constraint {
 
         DirectionConstraint(std::shared_ptr<Joint> j1, std::shared_ptr<Joint> j2, std::shared_ptr<Joint> dir, std::string c) : j1(j1), j2(j2), direction(dir), Constraint(c) { }
 
-        float error() override { 
+        double error() override { 
 
-            float Ax = j2->x-j1->x;
-            float Ay = j2->y-j1->y;
+            double Ax = j2->x-j1->x;
+            double Ay = j2->y-j1->y;
             
-            float cross = Ax*direction->y-Ay*direction->x;
-            float dot = Ax*direction->x+Ay*direction->y;
+            double cross = Ax*direction->y-Ay*direction->x;
+            double dot = Ax*direction->x+Ay*direction->y;
 
             return atan2(cross, dot);
         }
@@ -28,7 +28,7 @@ class DirectionConstraint : public Constraint {
             
             row.setZero();
 
-            float den = (j1->x-j2->x)*(j1->x-j2->x)+(j1->y-j2->y)*(j1->y-j2->y);
+            double den = (j1->x-j2->x)*(j1->x-j2->x)+(j1->y-j2->y)*(j1->y-j2->y);
 
             if(den < 1e-12) return;
 

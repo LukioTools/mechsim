@@ -1,4 +1,22 @@
-s 294 485 1 0 mouse_position
-s 200 200 1 1 2g
 s 200 400 1 1 1g
-s 250 150 0 1 down
+s 150 0 0 0 1g_1g_down_up_final_distance
+s 365 213 0 1 1g_down_up_final
+s 330 0 0 0 1g_down_up_final_distance
+s 300 0 0 0 1g_down_up_final_up_distance
+s 200 200 1 1 2g
+s 200 0 0 0 2g_down_distance
+s 357 77 0 1 down
+s 130 0 0 0 down_down_up_final_distance
+s 420 154 0 1 down_up_final
+s 400 0 0 0 down_up_final_distance
+s 819 178 0 1 final
+s 339 91 1 0 mouse_position
+s 535 460 0 1 up
+s 606 390 0 1 up_final
+s 400 0 0 0 up_final_distance
+s 100 0 0 0 up_up_final_distance
+
+d mouse_position - 2g 0 mouse_direction
+d down_up_final - down 0 up_final_direction
+d up_final - up 0 up_up_final_direction
+d down_up_final - 1g 0 1g_down_up_final_direction

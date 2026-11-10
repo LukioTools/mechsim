@@ -35,7 +35,7 @@ struct DynamicJoint : Joint {
             } 
             case MULTIPLICATION: {
                 x = joint1->x * joint2->x;
-                y = joint2->y * joint2->y;
+                y = joint1->y * joint2->y;
                 break;
             }
             case SUBSTRACTION: {

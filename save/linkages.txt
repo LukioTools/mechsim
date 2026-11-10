@@ -1,2 +1,6 @@
-ground up a
-up end b
+1g 2g a
+2g down b
+down up_final c
+1g down_up_final d
+1g_down_up_final up e
+up final f

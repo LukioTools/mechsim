@@ -4,11 +4,13 @@
 #include <cstdlib>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/LU>
+#include <exception>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_float2x2.hpp>
 #include <iostream>
 #include <memory>
 #include <ostream>
+#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <vector>
@@ -145,7 +147,7 @@ int main() {
     windowManager.selectWindow(topBarWindow);
 
 
-    ENABLE_ALT_BUF();
+    //ENABLE_ALT_BUF();
 
     bool leftDragging = false;
     Vec2 initPosLeft;
@@ -153,6 +155,8 @@ int main() {
 
     LineRenderer::init();
     BallRenderer::init();
+
+    solver->allJoints = simulationData.joints;
 
     while(!glfwWindowShouldClose(window))
     {
@@ -182,7 +186,7 @@ int main() {
         }
 
 
-        glm::mat4 projection = glm::ortho(0.0f - realOffset.x, (float)(width*cursorScaling) - realOffset.x, 0.0f - realOffset.y, (float)(windowHeight*cursorScaling) - realOffset.y, -1.0f, 1.0f);
+        glm::mat4 projection = glm::ortho((float)(0.0f - realOffset.x), (float)((float)(width*cursorScaling) - realOffset.x), (float)(0.0f - realOffset.y), (float)((float)(windowHeight*cursorScaling) - realOffset.y), -1.0f, 1.0f);
 
         (*simulationData.joints)["mouse_position"]->setPosition(cursorPos*cursorScaling-realOffset);
 
@@ -191,6 +195,7 @@ int main() {
         }
 
         for (auto& joint : (*simulationData.joints)) {
+            std::cout << "joint: " << joint.first << " " << joint.second << std::endl;
             if(joint.second->is_visible)
                 joint.second->ballRenderer.draw(projection);
         }
@@ -215,7 +220,7 @@ int main() {
         // Solver:
         if(!status.stopSimulation) {
             solver->updateConstraints(simulationData.constraints);
-            bool fixed_result = solver->solve(100);
+            bool fixed_result = solver->solve(300);
             if(fixed_result) {
                 TUI::setCursor(Vec2(100, 0));
                 std::cout << "solved" << std::flush;
@@ -225,7 +230,7 @@ int main() {
         glfwPollEvents();    
     }
 
-    DISABLE_ALT_BUF();
+    //DISABLE_ALT_BUF();
     glfwTerminate();
     return 0;
 }

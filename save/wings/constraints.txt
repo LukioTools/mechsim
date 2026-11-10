@@ -1,18 +1,18 @@
-dis up final between_up_and_final_dinstance a
-dis up up_final up_final_distance b
-dir up up_final up_final_dir c
+dis 2g down 2g_down_distance a
+dir down 2g mouse_direction b
 
-dis 2g down 2g_down_distance d
-dis down up_final down_up_final_distance e
+dis up final up_final_distance c
+dis up up_final up_up_final_distance d
 
-dir down down_up_final down_down_up_final_dir f
+dir up_final up up_final_direction e
+
+dis down up_final down_up_final_distance f
+
 dis down down_up_final down_down_up_final_distance g
+dir down_up_final down down_up_final_direction h
+dis 1g down_up_final 1g_down_up_final_distance i
 
-dis 1g down_up_final 1g_down_up_final_distance h
+dir 1g_down_up_final 1g 1g_1g_down_up_final j
+dis 1g 1g_down_up_final 1g_1g_down_up_final_distance k
 
-dis 1g 1g_down_up_final 1g_1g_down_up_final_distance i
-dir 1g 1g_down_up_final 1g_1g_down_up_final_dir j
-
-dis 1g_down_up_final up 1g_down_up_final_up_distance k
-
-dir 2g down mouse_dir_from_2g l
+dis 1g_down_up_final up 1g_down_up_final_up_distance l

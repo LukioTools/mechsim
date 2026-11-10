@@ -17,6 +17,8 @@
 #include <eigen3/Eigen/Dense>
 
 #include "./constraints/Constraint.hpp"
+#include "DynamicJoint.hpp"
+#include "SimulationData.hpp"
 #include "Vec2.hpp"
 
 void printMatrix(const Eigen::MatrixXd& M)
@@ -43,6 +45,8 @@ void printMatrix(const Eigen::MatrixXd& M)
 struct Solver {
     std::shared_ptr<std::map<std::string,std::shared_ptr<Constraint>>> constraints;
     std::vector<std::shared_ptr<Joint>> joints;
+        std::shared_ptr<std::map<typename std::string, std::shared_ptr<Joint>>> allJoints;
+
     int max_variable_index;
 
     void get_joints() {
@@ -151,14 +155,6 @@ struct Solver {
             Eigen::MatrixXd J = get_jacobian();
             Eigen::VectorXd errors = get_errors();
 
-            /*
-            std::cout << "\n\nerror: \n" << '\n';
-            printMatrix(errors);
-
-            std::cout << "derivate: \n";
-            printMatrix(J);
-            */
-
             if(checkTolerances(errors, 0.01)) {
                 return true;
             }
@@ -167,8 +163,6 @@ struct Solver {
 
             Eigen::VectorXd delta_q = -J.transpose() * A.ldlt().solve(errors);
 
-            double step_length = delta_q.norm();
-
             for (std::shared_ptr<Joint> joint : joints) {
                 if(joint->variable_index == grounded) continue;
                 
@@ -176,7 +170,37 @@ struct Solver {
                 Vec2 delta = Vec2(delta_q(k), delta_q(k+1));
                 joint->move(delta);
             }
+
         }
+        /*
+        //printMatrix(get_errors());
+        Eigen::MatrixXd J = get_jacobian();
+
+        Eigen::JacobiSVD<Eigen::MatrixXd> svd(J, Eigen::ComputeFullV );
+
+        double tolerance = 1e-8;
+
+        int rank = 0;
+
+        for (int i = 0; i < svd.singularValues().size(); i++) {
+            if (svd.singularValues()(i) > tolerance)
+                rank++;
+        }
+
+        std::cout << "Jacobian rank: " << rank << " / " << J.cols() << '\n';
+        std::cout << svd.singularValues() << '\n';
+
+        Eigen::VectorXd null_direction =
+            svd.matrixV().col(svd.matrixV().cols() - 1);
+
+        for (int i = 0; i < max_variable_index; i++) {
+            std::cout << "Joint " << SimulationData::findJointkey(joints[i], allJoints) << ": "
+                    << null_direction(2*i) << ", "
+                    << null_direction(2*i+1) << '\n';
+        }
+
+        throw std::invalid_argument(",,");
+        */
         resetPositions();
         return false;
     }

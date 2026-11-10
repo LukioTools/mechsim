@@ -11,7 +11,7 @@ class LinearConstraint : public Constraint {
 
         LinearConstraint(std::shared_ptr<Joint> j, std::shared_ptr<Vec2> p, std::shared_ptr<Vec2> dir, std::string c) : joint(j), position(p), sharedDirection(dir), Constraint(c) { }
 
-        float error() override {
+        double error() override {
             Vec2 direction = sharedDirection->unit();
             return -direction.y*(joint->x - position->x) + direction.x*(joint->y - position->y);
         }

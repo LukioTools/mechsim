@@ -13,9 +13,9 @@ class DistanceConstraint : public Constraint {
         DistanceConstraint(std::shared_ptr<Joint> joint1, std::shared_ptr<Joint> joint2, std::shared_ptr<Joint> distance, std::string c)
             : j1(joint1), j2(joint2), target_distance(distance), Constraint(c) {}
 
-        float error() override {
-            float dx = j2->x - j1->x;
-            float dy = j2->y - j1->y;
+        double error() override {
+            double dx = j2->x - j1->x;
+            double dy = j2->y - j1->y;
 
             return sqrt(dx*dx + dy*dy)-target_distance->length();
         }
