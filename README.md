@@ -138,6 +138,9 @@ joint_a joint_b linkage_name
 
 Linkage names are currently not used by the simulator, but they are mandatory.
 
+### Saving
+please note that you can save, but joints are scambled and it may not run next time as the dynamic joints can be defined before their inputs. You must manually move the dynamic joints to the end of the file/after their input definitons.
+
 ## 4. Troubleshooting
 
 If Mechsim crashes during startup, check the following:
@@ -148,6 +151,8 @@ If Mechsim crashes during startup, check the following:
 4. Invalid operators: Dynamic joints only support `+`, `-`, `*`, and `/`.
 5. Missing names: Every joint, constraint, and linkage must have a name, even if the simulator does not use it.
 6. If it can't solve constraints, you can disable position resetting Solver.hpp after failed try to debug. You may want to rewrite constraints and joints in a different way as two different configuration (which should result to same outcome) may have different "solvability" as sensitivy of the system may change.
+7. Simulation is paused at startup so you must press `p` to start the simulation.
+8. After saving you must move the dynamic joints as they are not saved in safe way.
 
 GENERAL RECOMMENDATION: If the simulator crashes during launch, start by checking `joints.txt` and `constraints.txt`. Incorrect joint references and definition order are common causes of startup problems.
 
