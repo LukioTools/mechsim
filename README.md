@@ -147,6 +147,7 @@ If Mechsim crashes during startup, check the following:
 3. Mouse position: Make sure a joint named `mouse_position` is defined.
 4. Invalid operators: Dynamic joints only support `+`, `-`, `*`, and `/`.
 5. Missing names: Every joint, constraint, and linkage must have a name, even if the simulator does not use it.
+6. If it can't solve constraints, you can disable position resetting Solver.hpp after failed try to debug. You may want to rewrite constraints and joints in a different way as two different configuration (which should result to same outcome) may have different "solvability" as sensitivy of the system may change.
 
 GENERAL RECOMMENDATION: If the simulator crashes during launch, start by checking `joints.txt` and `constraints.txt`. Incorrect joint references and definition order are common causes of startup problems.
 
