@@ -59,6 +59,35 @@ struct Solver {
         }
     }
 
+    void printRank() {
+        
+        //printMatrix(get_errors());
+        Eigen::MatrixXd J = get_jacobian();
+
+        Eigen::JacobiSVD<Eigen::MatrixXd> svd(J, Eigen::ComputeFullV );
+
+        double tolerance = 1e-8;
+
+        int rank = 0;
+
+        for (int i = 0; i < svd.singularValues().size(); i++) {
+            if (svd.singularValues()(i) > tolerance)
+                rank++;
+        }
+
+        std::cout << "Jacobian rank: " << rank << " / " << J.cols() << '\n';
+        std::cout << svd.singularValues() << '\n';
+
+        Eigen::VectorXd null_direction =
+            svd.matrixV().col(svd.matrixV().cols() - 1);
+
+        for (int i = 0; i < max_variable_index; i++) {
+            std::cout << "Joint " << SimulationData::findJointkey(joints[i], allJoints) << ": "
+                    << null_direction(2*i) << ", "
+                    << null_direction(2*i+1) << '\n';
+        }
+    }
+
     Eigen::MatrixXd get_jacobian() {
         Eigen::MatrixXd Jacobian(constraints->size(), max_variable_index*2);
         Jacobian.setZero();
@@ -172,35 +201,6 @@ struct Solver {
             }
 
         }
-        /*
-        //printMatrix(get_errors());
-        Eigen::MatrixXd J = get_jacobian();
-
-        Eigen::JacobiSVD<Eigen::MatrixXd> svd(J, Eigen::ComputeFullV );
-
-        double tolerance = 1e-8;
-
-        int rank = 0;
-
-        for (int i = 0; i < svd.singularValues().size(); i++) {
-            if (svd.singularValues()(i) > tolerance)
-                rank++;
-        }
-
-        std::cout << "Jacobian rank: " << rank << " / " << J.cols() << '\n';
-        std::cout << svd.singularValues() << '\n';
-
-        Eigen::VectorXd null_direction =
-            svd.matrixV().col(svd.matrixV().cols() - 1);
-
-        for (int i = 0; i < max_variable_index; i++) {
-            std::cout << "Joint " << SimulationData::findJointkey(joints[i], allJoints) << ": "
-                    << null_direction(2*i) << ", "
-                    << null_direction(2*i+1) << '\n';
-        }
-
-        throw std::invalid_argument(",,");
-        */
         resetPositions();
         return false;
     }
