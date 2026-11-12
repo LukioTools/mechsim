@@ -1,4 +1,4 @@
-# Mechsim – File Format Documentation
+# Mechsim
 
 Mechsim is a highly customizable, dynamic joint and linkage simulator. It supports multiple constraint types, allowing you to create and simulate various mechanical systems.
 
